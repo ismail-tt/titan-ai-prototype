@@ -1,0 +1,1804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Titan AI — Amazon Seller AI Agent</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:         #0f0f10;
+  --bg-side:    #151516;
+  --bg-elev:    #1c1c1f;   /* menus / modals */
+  --bg-bubble:  #232326;
+  --bg-card:    #161618;
+  --bg-thumb:   #1a1a1d;
+  --bg-hover:   #242428;
+  --border:     #2b2b30;
+  --border-2:   #232327;
+  --input-bg:   #161618;
+  --text:       #ededed;
+  --text-2:     #a1a1aa;
+  --text-3:     #6b6b73;
+  --amber:      #fbb825;  /* titan_gold (brand) */
+  --amber-dim:  #c8a03c;  /* titan_dim */
+  --amber-light:#fdd07a;  /* champagne highlight */
+  --green:      #50c850;  /* titan_green (brand) */
+  --green-dim:  #3da93d;
+  --code-bg:    rgba(255,255,255,0.06);
+  --code-bd:    rgba(255,255,255,0.09);
+  --shadow:     0 14px 44px rgba(0,0,0,0.5);
+}
+
+body.light {
+  --bg:         #f7f6f4;
+  --bg-side:    #f0efec;
+  --bg-elev:    #ffffff;
+  --bg-bubble:  #ececec;
+  --bg-card:    #ffffff;
+  --bg-thumb:   #e7e6e3;
+  --bg-hover:   #e9e8e4;
+  --border:     #dcdad5;
+  --border-2:   #e6e4df;
+  --input-bg:   #ffffff;
+  --text:       #1b1b1d;
+  --text-2:     #57575e;
+  --text-3:     #8c8c93;
+  --amber:      #c2890c;  /* darker brand gold for light bg */
+  --amber-dim:  #a8780b;
+  --amber-light:#b07f0c;
+  --green:      #2f9e2f;
+  --green-dim:  #2f9e2f;
+  --code-bg:    rgba(0,0,0,0.05);
+  --code-bd:    rgba(0,0,0,0.10);
+  --shadow:     0 14px 44px rgba(0,0,0,0.18);
+}
+
+html, body { height: 100%; overflow: hidden; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.2s, color 0.2s;
+}
+
+.app { display: flex; height: 100vh; overflow: hidden; }
+
+/* ── Sidebar ──────────────────────────────────────────────────────────────── */
+.sidebar {
+  width: 232px;
+  background: var(--bg-side);
+  border-right: 1px solid var(--border-2);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  padding: 18px 14px 12px;
+  position: relative;
+}
+
+.logo { display: flex; align-items: center; gap: 9px; padding: 2px 6px 16px; }
+.logo-mark { height: 34px; width: auto; flex-shrink: 0; display: block; }
+.logo-text {
+  display: flex; flex-direction: column;
+  font-weight: 800; font-size: 16px; letter-spacing: 1px;
+  line-height: 1.0; color: var(--text);
+}
+.logo-text .sub {
+  font-size: 9px; font-weight: 600; letter-spacing: 0.34em;
+  color: var(--text-2); margin-top: 3px;
+}
+
+.new-chat-btn {
+  display: flex; align-items: center; justify-content: center; gap: 9px;
+  background: var(--amber); color: #1a1100; border: none;
+  padding: 11px 14px; border-radius: 11px;
+  font-size: 12.5px; font-weight: 700; letter-spacing: 0.06em;
+  cursor: pointer; transition: background 0.15s; text-transform: uppercase;
+}
+.new-chat-btn:hover { background: var(--amber-light); }
+.new-chat-btn svg { width: 14px; height: 14px; }
+
+.section-label {
+  font-size: 10.5px; font-weight: 600; letter-spacing: 0.16em;
+  color: var(--text-3); text-transform: uppercase; margin: 20px 8px 6px;
+}
+
+.chat-list {
+  flex: 1; overflow-y: auto; margin: 0 -6px; padding: 0 6px;
+  scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+}
+.chat-item {
+  display: block; padding: 9px 11px; border-radius: 8px; cursor: pointer;
+  color: var(--text-2); font-size: 13px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  transition: background 0.12s, color 0.12s;
+}
+.chat-item:hover { background: var(--bg-hover); color: var(--text); }
+.chat-item.active { background: var(--bg-hover); color: var(--text); }
+
+/* Profile bar */
+.profile-bar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 8px; margin-top: 8px;
+  border-top: 1px solid var(--border-2); padding-top: 12px;
+  cursor: pointer; border-radius: 8px;
+}
+.profile-bar:hover { background: var(--bg-hover); }
+.avatar {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: linear-gradient(135deg, #3a3a3f, #2a2a2e);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-2); flex-shrink: 0;
+}
+.avatar svg { width: 15px; height: 15px; }
+.profile-info { flex: 1; min-width: 0; }
+.profile-name { font-size: 13px; font-weight: 600; color: var(--text); line-height: 1.2;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.profile-tier { font-size: 11px; color: var(--text-3); margin-top: 1px; }
+
+/* Profile menu */
+.profile-menu {
+  position: absolute; left: 14px; bottom: 60px; width: 200px;
+  background: var(--bg-elev); border: 1px solid var(--border);
+  border-radius: 12px; padding: 6px; box-shadow: var(--shadow);
+  z-index: 40; display: none;
+}
+.profile-menu.show { display: block; animation: pop 0.14s ease-out; }
+.menu-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 11px; border-radius: 8px; color: var(--text);
+  font-size: 13px; cursor: pointer;
+}
+.menu-item:hover { background: var(--bg-hover); }
+.menu-item svg { width: 16px; height: 16px; color: var(--text-2); }
+
+/* Collapse arrow */
+.collapse-btn {
+  position: absolute; right: -11px; top: 50%; transform: translateY(-50%);
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--bg-side); border: 1px solid var(--border);
+  color: var(--text-3); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 5; font-size: 12px;
+}
+.collapse-btn:hover { color: var(--text); }
+
+/* ── Main ─────────────────────────────────────────────────────────────────── */
+.main {
+  flex: 1; display: flex; flex-direction: column;
+  overflow: hidden; min-width: 0; background: var(--bg);
+}
+
+.topbar {
+  height: 54px; display: flex; align-items: center;
+  padding: 0 24px; flex-shrink: 0; gap: 14px;
+}
+.chat-title { font-size: 15px; font-weight: 700; color: var(--text); letter-spacing: -0.01em; }
+.topbar-right { margin-left: auto; display: flex; align-items: center; gap: 14px; }
+
+.auto-approve { display: flex; align-items: center; gap: 9px; }
+.auto-approve .aa-label {
+  font-size: 10.5px; font-weight: 600; letter-spacing: 0.13em;
+  color: var(--text-3); text-transform: uppercase;
+}
+.switch {
+  width: 34px; height: 18px; border-radius: 999px; background: #3a3a40;
+  position: relative; cursor: pointer; transition: background 0.15s; flex-shrink: 0;
+}
+.switch::after {
+  content: ''; position: absolute; top: 2px; left: 2px;
+  width: 14px; height: 14px; border-radius: 50%; background: #cfcfcf;
+  transition: transform 0.18s, background 0.18s;
+}
+.switch.on { background: var(--amber); }
+.switch.on::after { transform: translateX(16px); background: #1a1100; }
+
+.icon-btn {
+  background: none; border: none; color: var(--text-2); cursor: pointer;
+  padding: 6px; border-radius: 7px; display: flex; align-items: center; justify-content: center;
+}
+.icon-btn:hover { background: var(--bg-hover); color: var(--text); }
+.icon-btn svg { width: 18px; height: 18px; }
+
+/* ── Messages ─────────────────────────────────────────────────────────────── */
+.messages-wrap { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+.messages {
+  width: 100%; max-width: 820px; margin: 0 auto;
+  padding: 14px 28px 30px; display: flex; flex-direction: column; gap: 26px;
+}
+
+/* User message */
+.msg-user { display: flex; justify-content: flex-end; }
+.msg-user .bubble {
+  background: var(--bg-bubble); padding: 13px 18px;
+  border-radius: 16px 16px 4px 16px; max-width: 72%;
+  font-size: 14px; line-height: 1.55; color: var(--text);
+}
+.msg-user, .msg-ai { animation: msgIn 0.35s ease-out both; }
+@keyframes msgIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* AI message */
+.msg-ai { display: flex; flex-direction: column; }
+
+/* ── Agent trace (thinking + subagents) ──────────────────────────────────── */
+.agent-trace { display: flex; flex-direction: column; }
+.trace-step {
+  display: flex; align-items: center; gap: 11px;
+  padding: 8px 0; cursor: pointer; user-select: none;
+}
+.trace-step .ic { width: 16px; height: 16px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.trace-step .label { font-size: 14px; font-weight: 600; color: var(--text); }
+.trace-step .meta {
+  margin-left: auto; display: flex; align-items: center; gap: 9px;
+  color: var(--text-3); font-size: 12px; font-variant-numeric: tabular-nums;
+}
+.trace-step .meta .chev { width: 13px; height: 13px; transition: transform 0.15s; }
+.trace-step.collapsed .meta .chev { transform: rotate(-90deg); }
+
+.ic-check { color: var(--green); }
+.ic-check svg { width: 16px; height: 16px; }
+.spin {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 2px solid rgba(150,150,150,0.25); border-top-color: var(--amber);
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.trace-reason {
+  font-size: 14px; line-height: 1.65; color: #cfcfcf;
+  padding: 2px 0 10px 27px;
+}
+body.light .trace-reason { color: #444; }
+.trace-reason.collapsed { display: none; }
+
+/* Subagent rail */
+.subagents {
+  margin: 0 0 6px 7px; padding-left: 22px;
+  border-left: 1.5px solid var(--border);
+}
+.subagents.collapsed { display: none; }
+.subagent {
+  display: flex; align-items: center; gap: 11px;
+  padding: 9px 0; cursor: pointer; user-select: none;
+}
+.subagent .ic { width: 16px; height: 16px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.subagent .branch { width: 15px; height: 15px; color: var(--amber); flex-shrink: 0; }
+.subagent .branch svg { width: 15px; height: 15px; }
+.subagent .name { font-size: 14px; font-weight: 600; color: var(--text); }
+.subagent .tag {
+  font-size: 9px; font-weight: 700; letter-spacing: 0.15em;
+  color: var(--amber); text-transform: uppercase;
+}
+.subagent .meta {
+  margin-left: auto; display: flex; align-items: center; gap: 9px;
+  color: var(--text-3); font-size: 12px; font-variant-numeric: tabular-nums;
+}
+.subagent .meta .chev { width: 13px; height: 13px; transition: transform 0.15s; }
+.subagent.open .meta .chev { transform: rotate(180deg); }
+.sub-detail {
+  padding: 2px 0 10px 42px; display: flex; flex-direction: column; gap: 5px;
+}
+.sub-detail.collapsed { display: none; }
+.sub-detail .tool {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 11.5px; color: var(--text-3);
+}
+.sub-detail .tool::before { content: '› '; color: var(--amber); }
+
+.confirm-block { padding-top: 4px; }
+.confirm-label {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 600; color: var(--text-2); margin-bottom: 5px;
+}
+.confirm-label .chev { width: 13px; height: 13px; transition: transform 0.15s; }
+.confirm-block.collapsed .confirm-label .chev { transform: rotate(-90deg); }
+.confirm-text { font-size: 13.5px; line-height: 1.6; color: var(--text-3); }
+.confirm-block.collapsed .confirm-text { display: none; }
+
+/* ── AI answer content ───────────────────────────────────────────────────── */
+.ai-content { color: var(--text); font-size: 14px; line-height: 1.7; margin-top: 10px; }
+.ai-content > *:first-child { margin-top: 0; }
+.ai-content p { margin-bottom: 13px; color: #d6d6d6; }
+body.light .ai-content p { color: #2c2c2e; }
+.ai-content a { color: var(--amber); text-decoration: underline; text-underline-offset: 2px; }
+.ai-content a:hover { color: var(--amber-light); }
+.ai-content strong { color: var(--text); font-weight: 700; }
+.ai-content code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 12.5px; background: var(--code-bg); border: 1px solid var(--code-bd);
+  border-radius: 5px; padding: 1px 6px; color: var(--text);
+}
+.answer-h { font-size: 15px; font-weight: 700; color: var(--text); margin: 6px 0 8px; }
+.answer-list { list-style: decimal; margin: 4px 0 14px; padding-left: 22px; }
+.answer-list > li { margin-bottom: 14px; padding-left: 4px; }
+.answer-list > li::marker { color: var(--text-2); font-weight: 600; }
+.answer-list .li-title { font-weight: 500; color: var(--text); margin-bottom: 2px; }
+.answer-list p { margin: 0; color: #d6d6d6; }
+body.light .answer-list p { color: #2c2c2e; }
+
+.cursor {
+  display: inline-block; width: 7px; height: 15px; background: var(--amber);
+  vertical-align: text-bottom; margin-left: 2px;
+  animation: blink 0.9s steps(2) infinite; border-radius: 1px;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ── Message actions ─────────────────────────────────────────────────────── */
+.msg-actions { display: flex; align-items: center; gap: 2px; margin-top: 16px; }
+.act-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: none; border: none; color: var(--text-3);
+  font-size: 12px; font-weight: 500; padding: 6px 9px; border-radius: 7px;
+  cursor: pointer; font-family: inherit; transition: color 0.12s, background 0.12s;
+}
+.act-btn:hover { color: var(--text); background: var(--bg-hover); }
+.act-btn.on { color: var(--amber); }
+.act-btn svg { width: 15px; height: 15px; }
+
+/* ── Sources ─────────────────────────────────────────────────────────────── */
+.sources { margin-top: 22px; }
+.sources-header {
+  display: inline-flex; align-items: center; gap: 9px; cursor: pointer;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.16em;
+  color: var(--text-2); text-transform: uppercase;
+}
+.sources-header:hover { color: var(--text); }
+.sources-header .chev { width: 13px; height: 13px; transition: transform 0.15s; }
+.sources.collapsed .sources-header .chev { transform: rotate(-90deg); }
+.sources-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 14px; margin-top: 14px;
+}
+.sources.collapsed .sources-grid { display: none; }
+.source-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden; cursor: pointer;
+  transition: border-color 0.15s, transform 0.15s;
+}
+.source-card:hover { border-color: #3f3f45; transform: translateY(-1px); }
+.source-thumb {
+  position: relative; aspect-ratio: 16/9;
+  background: linear-gradient(160deg, #202024, #141416);
+  display: flex; align-items: center; justify-content: center;
+}
+body.light .source-thumb { background: linear-gradient(160deg, #e2e1dd, #d3d2ce); }
+.source-thumb .play { width: 48px; height: 48px; color: rgba(255,255,255,0.22); }
+body.light .source-thumb .play { color: rgba(0,0,0,0.28); }
+.match-badge {
+  position: absolute; top: 9px; right: 9px;
+  background: var(--amber); color: #1a1100;
+  font-size: 10.5px; font-weight: 700; padding: 3px 8px; border-radius: 6px;
+}
+.source-body { padding: 11px 13px 13px; }
+.source-type {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.16em;
+  color: var(--amber); margin-bottom: 7px;
+}
+.source-type::before {
+  content: ''; display: inline-block; width: 0; height: 0;
+  border-left: 7px solid var(--amber);
+  border-top: 4.5px solid transparent; border-bottom: 4.5px solid transparent;
+}
+.source-title { font-size: 13px; color: var(--text); font-weight: 500; line-height: 1.4; }
+
+/* ── Input ───────────────────────────────────────────────────────────────── */
+.input-area { padding: 4px 0 16px; background: var(--bg); }
+.input-inner { max-width: 820px; margin: 0 auto; padding: 0 28px; position: relative; }
+
+.account-anchor { position: relative; display: inline-block; margin-bottom: 9px; }
+.account-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(251,184,37,0.08); border: 1px solid rgba(251,184,37,0.4);
+  color: var(--amber-light); border-radius: 999px;
+  padding: 6px 13px; font-size: 12.5px; font-weight: 600;
+  cursor: pointer;
+}
+.account-pill:hover { background: rgba(251,184,37,0.14); }
+.account-pill .store { width: 14px; height: 14px; }
+.account-pill .chev { width: 12px; height: 12px; transition: transform 0.15s; }
+.account-pill.open .chev { transform: rotate(180deg); }
+
+/* Account dropdown */
+.account-menu {
+  position: absolute; left: 0; bottom: calc(100% + 8px); width: 250px;
+  background: var(--bg-elev); border: 1px solid var(--border);
+  border-radius: 13px; padding: 8px; box-shadow: var(--shadow);
+  z-index: 30; display: none;
+}
+.account-menu.show { display: block; animation: pop 0.14s ease-out; }
+.account-menu .am-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.16em;
+  color: var(--text-3); text-transform: uppercase; padding: 6px 10px 8px;
+}
+.account-row {
+  display: flex; align-items: center; gap: 11px;
+  padding: 9px 10px; border-radius: 9px; cursor: pointer;
+}
+.account-row:hover { background: var(--bg-hover); }
+.account-row .store { width: 17px; height: 17px; color: var(--text-2); flex-shrink: 0; }
+.account-row.active .store { color: var(--amber); }
+.account-row .ar-info { flex: 1; min-width: 0; }
+.account-row .ar-name { font-size: 13.5px; font-weight: 600; color: var(--text); }
+.account-row.active .ar-name { color: var(--amber-light); }
+.account-row .ar-sub { font-size: 11px; color: var(--text-3); margin-top: 1px; }
+.account-row .ar-check { width: 15px; height: 15px; color: var(--amber); flex-shrink: 0; }
+
+.input-box {
+  display: flex; align-items: flex-end; gap: 8px;
+  background: var(--input-bg); border: 1px solid var(--border);
+  border-radius: 14px; padding: 6px 8px 6px 18px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.input-box:focus-within {
+  border-color: rgba(251,184,37,0.55);
+  box-shadow: 0 0 0 3px rgba(251,184,37,0.08);
+}
+.input-box textarea {
+  flex: 1; background: none; border: none; color: var(--text);
+  font-size: 14px; line-height: 1.5; outline: none;
+  padding: 9px 8px 9px 0; font-family: inherit; resize: none;
+  overflow-y: hidden; max-height: 200px; min-height: 22px;
+  display: block; width: 100%;
+}
+.input-box textarea.scrollable { overflow-y: auto; }
+.input-box textarea::placeholder { color: var(--text-3); }
+.input-box .icon-btn { padding: 8px; margin-bottom: 1px; }
+.send-btn {
+  background: var(--amber); border: none; border-radius: 9px;
+  width: 33px; height: 33px; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: #1a1100; opacity: 0.5; margin-bottom: 1px;
+  transition: background 0.15s, opacity 0.15s;
+}
+.send-btn.active { opacity: 1; }
+.send-btn.active:hover { background: var(--amber-light); }
+.send-btn svg { width: 14px; height: 14px; }
+.send-btn.stop { opacity: 1; background: var(--text); }
+.send-btn.stop:hover { background: var(--text); }
+.send-btn.stop .stop-ic { width: 11px; height: 11px; background: #1a1100; border-radius: 2px; }
+
+.disclaimer { text-align: center; font-size: 11.5px; color: var(--text-3); margin-top: 10px; }
+
+/* ── Welcome screen ──────────────────────────────────────────────────────── */
+.welcome-screen {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; text-align: center; padding: 40px 28px;
+  max-width: 720px; margin: 0 auto; animation: fadeIn 0.4s ease-out;
+}
+.welcome-icon { width: 42px; height: 42px; color: var(--amber); margin-bottom: 18px; }
+.welcome-title { font-size: 23px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+.welcome-subtitle { font-size: 14px; color: var(--text-2); line-height: 1.55; margin-bottom: 36px; max-width: 540px; }
+.suggestion-list { width: 100%; display: flex; flex-direction: column; gap: 12px; }
+.suggestion-card {
+  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  width: 100%; text-align: left; background: var(--bg-card);
+  border: 1px solid var(--border); border-radius: 12px; padding: 17px 20px;
+  color: var(--text); font-size: 14px; font-weight: 500; line-height: 1.45;
+  cursor: pointer; transition: border-color 0.15s, background 0.15s, transform 0.15s;
+  font-family: inherit;
+}
+.suggestion-card:hover { border-color: rgba(251,184,37,0.55); background: var(--bg-hover); transform: translateY(-1px); }
+.suggestion-card .arrow { width: 16px; height: 16px; color: var(--amber); flex-shrink: 0; opacity: 0; transition: opacity 0.15s, transform 0.15s; }
+.suggestion-card:hover .arrow { opacity: 1; transform: translateX(2px); }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pop { from { opacity: 0; transform: translateY(6px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+/* ── Overlay + modals ────────────────────────────────────────────────────── */
+.overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+  display: none; align-items: center; justify-content: center; z-index: 60;
+}
+.overlay.show { display: flex; animation: fadeIn 0.15s ease-out; }
+.modal {
+  background: var(--bg-elev); border: 1px solid var(--border);
+  border-radius: 16px; box-shadow: var(--shadow); animation: pop 0.18s ease-out;
+}
+
+/* Auto-approve confirm */
+.modal-confirm { width: 440px; max-width: calc(100vw - 40px); padding: 26px 26px 22px; }
+.modal-confirm h3 { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 9px; }
+.modal-confirm p { font-size: 13.5px; color: var(--text-2); line-height: 1.55; margin-bottom: 22px; }
+.modal-actions { display: flex; justify-content: flex-end; align-items: center; gap: 8px; }
+.btn-text { background: none; border: none; color: var(--text-2); font-size: 13.5px; font-weight: 600;
+  padding: 9px 16px; border-radius: 9px; cursor: pointer; font-family: inherit; }
+.btn-text:hover { color: var(--text); background: var(--bg-hover); }
+.btn-primary { background: var(--amber); border: none; color: #1a1100; font-size: 13.5px; font-weight: 700;
+  padding: 9px 18px; border-radius: 9px; cursor: pointer; font-family: inherit; }
+.btn-primary:hover { background: var(--amber-light); }
+
+/* Settings */
+.modal-settings { width: 540px; max-width: calc(100vw - 40px); padding: 24px 26px 26px; position: relative; }
+.settings-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 4px; }
+.settings-head .gear { width: 20px; height: 20px; color: var(--text); margin-top: 2px; }
+.settings-title { font-size: 18px; font-weight: 700; color: var(--text); }
+.settings-sub { font-size: 13px; color: var(--text-2); margin: 4px 0 20px 32px; }
+.modal-close {
+  position: absolute; top: 18px; right: 18px;
+  width: 30px; height: 30px; border-radius: 8px;
+  border: 1px solid var(--amber); background: none; color: var(--amber);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.modal-close:hover { background: rgba(251,184,37,0.1); }
+.modal-close svg { width: 15px; height: 15px; }
+.acct-card { display: flex; align-items: center; gap: 14px; padding: 6px 4px 14px; }
+.acct-card .avatar { width: 42px; height: 42px; }
+.acct-card .avatar svg { width: 20px; height: 20px; }
+.avatar-initial { font-weight: 700; font-size: 17px; color: var(--text); }
+.acct-info { flex: 1; min-width: 0; }
+.acct-name { font-size: 15px; font-weight: 700; color: var(--text); }
+.acct-email { font-size: 12.5px; color: var(--text-3); margin-top: 2px; }
+.member-pill {
+  border: 1px solid rgba(80,200,80,0.5); color: var(--green);
+  font-size: 11.5px; font-weight: 600; padding: 4px 13px; border-radius: 999px;
+}
+.settings-divider { height: 1px; background: var(--border-2); margin: 4px 0 20px; }
+.linked-label {
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.14em;
+  color: var(--text-3); text-transform: uppercase; margin-bottom: 16px;
+}
+.linked-row { display: flex; align-items: center; gap: 13px; padding: 11px 0; }
+.linked-row .shield { width: 19px; height: 19px; color: var(--green); flex-shrink: 0; }
+.linked-row .lr-name { font-size: 14px; font-weight: 600; color: var(--text); }
+.linked-row .lr-email { font-size: 12px; color: var(--text-3); margin-top: 1px; }
+.link-another {
+  display: flex; align-items: center; justify-content: center; gap: 9px;
+  margin-top: 14px; padding: 13px; color: var(--text-2);
+  font-size: 13.5px; font-weight: 500; cursor: pointer; border-radius: 10px;
+}
+.link-another:hover { color: var(--amber); }
+.link-another svg { width: 16px; height: 16px; }
+
+/* ── Scheduled tasks ─────────────────────────────────────────────────────── */
+.sched-list { margin-bottom: 2px; }
+.sched-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 8px 11px; border-radius: 8px; cursor: pointer;
+  color: var(--text-2); transition: background 0.12s, color 0.12s;
+}
+.sched-item:hover, .sched-item.active { background: var(--bg-hover); color: var(--text); }
+.sched-item .clock { width: 14px; height: 14px; color: var(--amber); flex-shrink: 0; }
+.sched-item .si-body { flex: 1; min-width: 0; }
+.sched-item .si-name { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sched-item .si-meta { font-size: 10.5px; color: var(--text-3); margin-top: 1px; }
+.sched-item .si-badge {
+  background: var(--amber); color: #1a1100; font-size: 10px; font-weight: 700;
+  min-width: 17px; height: 17px; border-radius: 9px; padding: 0 5px;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+
+.schedule-task-btn {
+  display: flex; align-items: center; justify-content: center; gap: 9px;
+  width: 100%; background: none; border: 1px solid var(--border);
+  color: var(--text); padding: 10px; border-radius: 10px; margin-top: 8px;
+  font-size: 12.5px; font-weight: 600; cursor: pointer; font-family: inherit;
+  transition: border-color 0.15s, background 0.15s;
+}
+.schedule-task-btn:hover { border-color: rgba(251,184,37,0.5); background: var(--bg-hover); }
+.schedule-task-btn svg { width: 15px; height: 15px; color: var(--amber); }
+
+/* create-flow chips */
+.sched-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.sched-chip {
+  background: var(--bg-card); border: 1px solid var(--border); color: var(--text);
+  border-radius: 999px; padding: 8px 15px; font-size: 13px; font-weight: 500;
+  cursor: pointer; font-family: inherit; transition: border-color 0.15s, background 0.15s, transform 0.1s;
+}
+.sched-chip:hover { border-color: rgba(251,184,37,0.55); background: var(--bg-hover); transform: translateY(-1px); }
+.sched-chips.spent { opacity: 0.45; pointer-events: none; }
+
+/* Scheduled confirmation card */
+.sched-confirm {
+  border: 1px solid rgba(80,200,80,0.35); background: rgba(80,200,80,0.06);
+  border-radius: 14px; padding: 16px 18px; margin-top: 14px; max-width: 470px;
+}
+.sched-confirm .sc-head { display: flex; align-items: center; gap: 7px; font-weight: 700; color: var(--green); font-size: 12.5px; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 9px; }
+.sched-confirm .sc-head .ic-check svg { width: 15px; height: 15px; }
+.sched-confirm .sc-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 10px; line-height: 1.4; }
+.sched-confirm .sc-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.sched-confirm .sc-when { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--text-2); }
+.sched-confirm .sc-when .clock { width: 14px; height: 14px; color: var(--amber); }
+.sched-confirm .sc-view { margin-top: 14px; }
+
+/* Mode badge */
+.mode-badge { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; padding: 3px 9px; border-radius: 999px; text-transform: uppercase; white-space: nowrap; }
+.mode-badge.notify { background: rgba(161,161,170,0.18); color: var(--text-2); }
+.mode-badge.approve { background: rgba(251,184,37,0.18); color: var(--amber); }
+.mode-badge.auto { background: rgba(80,200,80,0.18); color: var(--green); }
+
+/* Scheduled-task thread header */
+.sched-head { border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; }
+.sched-head .sh-top { display: flex; align-items: center; gap: 12px; }
+.sched-head .sh-title { font-size: 16px; font-weight: 700; color: var(--text); flex: 1; }
+.sched-head .sh-meta { display: flex; align-items: center; gap: 14px; margin-top: 11px; flex-wrap: wrap; color: var(--text-2); font-size: 12.5px; }
+.sched-head .sh-when { display: inline-flex; align-items: center; gap: 6px; }
+.sched-head .sh-when .clock { width: 14px; height: 14px; color: var(--amber); }
+.sched-toggle { flex-shrink: 0; }
+.run-block { display: flex; flex-direction: column; }
+.run-label {
+  display: flex; align-items: center; gap: 11px; margin: 0 0 10px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-3);
+}
+.run-label::after { content: ''; flex: 1; height: 1px; background: var(--border-2); }
+.run-empty { color: var(--text-3); font-size: 13.5px; padding: 4px 0; }
+
+/* Action / approval cards */
+.run-actions { margin-top: 14px; }
+.action-card {
+  display: flex; align-items: center; gap: 14px;
+  border: 1px solid var(--border); border-radius: 12px; padding: 12px 15px; margin-bottom: 9px;
+}
+.action-card .ac-body { flex: 1; min-width: 0; }
+.action-card .ac-title { font-size: 13.5px; color: var(--text); font-weight: 500; }
+.action-card .ac-title code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 12px; background: var(--code-bg); border: 1px solid var(--code-bd); border-radius: 5px; padding: 1px 6px;
+}
+.action-card .ac-detail { font-size: 11.5px; color: var(--text-3); margin-top: 3px; }
+.action-card .ac-btns { display: flex; gap: 7px; flex-shrink: 0; }
+.ac-approve, .ac-reject { border: none; border-radius: 8px; padding: 7px 13px; font-size: 12.5px; font-weight: 600; cursor: pointer; font-family: inherit; }
+.ac-approve { background: var(--amber); color: #1a1100; }
+.ac-approve:hover { background: var(--amber-light); }
+.ac-reject { background: none; border: 1px solid var(--border); color: var(--text-2); }
+.ac-reject:hover { color: var(--text); background: var(--bg-hover); }
+.action-card .ac-status { font-size: 12.5px; font-weight: 600; display: none; align-items: center; gap: 5px; }
+.action-card .ac-status .ic-check svg { width: 15px; height: 15px; }
+.action-card.approved .ac-btns, .action-card.rejected .ac-btns { display: none; }
+.action-card.approved .ac-status, .action-card.rejected .ac-status { display: inline-flex; }
+.action-card.approved { opacity: 0.85; } .action-card.approved .ac-status { color: var(--green); }
+.action-card.rejected { opacity: 0.5; } .action-card.rejected .ac-status { color: var(--text-3); }
+.approve-all {
+  display: inline-flex; align-items: center; gap: 8px; margin-bottom: 14px;
+  background: var(--amber); color: #1a1100; border: none; border-radius: 9px;
+  padding: 9px 16px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit;
+}
+.approve-all:hover { background: var(--amber-light); }
+.approve-all .ic-check svg { width: 15px; height: 15px; }
+
+/* Action preview (schedule create flow) */
+.action-preview { margin-top: 14px; max-width: 560px; }
+.ap-item { display: flex; align-items: center; gap: 11px; padding: 9px 13px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 8px; }
+.ap-item .ap-ic { width: 14px; height: 14px; color: var(--amber); flex-shrink: 0; display: flex; }
+.ap-item .ap-ic svg { width: 14px; height: 14px; }
+.ap-item .ap-text { flex: 1; font-size: 13px; color: var(--text); }
+.ap-item .ap-text code { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 12px; background: var(--code-bg); border: 1px solid var(--code-bd); border-radius: 5px; padding: 1px 5px; }
+.ap-item .ap-detail { font-size: 11.5px; color: var(--text-3); flex-shrink: 0; }
+.ap-hint { font-size: 12.5px; color: var(--text-2); margin: 14px 0 10px; }
+.ap-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+.ap-always, .ap-manual { display: inline-flex; align-items: center; gap: 8px; border-radius: 10px; padding: 11px 18px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; border: none; }
+.ap-always { background: var(--amber); color: #1a1100; }
+.ap-always:hover { background: var(--amber-light); }
+.ap-always svg { width: 15px; height: 15px; color: #1a1100; }
+.ap-manual { background: none; border: 1px solid var(--border); color: var(--text); }
+.ap-manual:hover { border-color: rgba(251,184,37,0.5); background: var(--bg-hover); }
+.ap-manual svg { width: 15px; height: 15px; color: var(--amber); }
+
+/* Task header controls */
+.sh-actions { display: flex; align-items: center; gap: 4px; }
+.sh-actions .icon-btn { padding: 6px; }
+.sh-actions .icon-btn svg { width: 16px; height: 16px; }
+.sh-del:hover { color: #e06a6a !important; background: rgba(224,85,85,0.1) !important; }
+.sh-actions .sched-toggle { margin-left: 6px; }
+.sched-item.paused { opacity: 0.5; }
+
+/* Edit task modal */
+.modal-edit { width: 540px; max-width: calc(100vw - 40px); padding: 24px 26px 22px; position: relative; }
+.edit-field { margin-bottom: 16px; }
+.edit-field > label { display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); margin-bottom: 8px; }
+.edit-instr { width: 100%; background: var(--input-bg); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: inherit; font-size: 13.5px; line-height: 1.5; padding: 10px 12px; resize: vertical; min-height: 46px; }
+.edit-instr:focus { outline: none; border-color: rgba(251,184,37,0.5); box-shadow: 0 0 0 3px rgba(251,184,37,0.08); }
+.edit-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.edit-chip { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-2); border-radius: 999px; padding: 7px 14px; font-size: 12.5px; font-weight: 600; cursor: pointer; font-family: inherit; transition: border-color 0.12s, color 0.12s, background 0.12s; }
+.edit-chip:hover { border-color: rgba(251,184,37,0.4); color: var(--text); }
+.edit-chip.selected { background: rgba(251,184,37,0.15); border-color: var(--amber); color: var(--amber); }
+.edit-actions { display: flex; align-items: center; gap: 8px; margin-top: 22px; }
+.danger-text { color: #e06a6a; background: none; border: none; font-size: 13.5px; font-weight: 600; padding: 9px 14px; border-radius: 9px; cursor: pointer; font-family: inherit; }
+.danger-text:hover { background: rgba(224,85,85,0.12); }
+.btn-primary.danger { background: #e05555; color: #fff; }
+.btn-primary.danger:hover { background: #e96b6b; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 5px; border: 2px solid transparent; background-clip: padding-box; }
+::-webkit-scrollbar-thumb:hover { background: #3c3c42; background-clip: padding-box; }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ─── Sidebar ─────────────────────────────────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="logo">
+      <img class="logo-mark" src="logo.png" alt="Titan Network">
+      <div class="logo-text">TITAN<span class="sub">NETWORK</span></div>
+    </div>
+
+    <button class="new-chat-btn" id="newChatBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+      NEW CHAT
+    </button>
+
+    <div class="section-label">Scheduled</div>
+    <div class="sched-list" id="schedList"></div>
+
+    <div class="section-label">Recent</div>
+    <div class="chat-list" id="chatList"></div>
+
+    <button class="schedule-task-btn" id="scheduleTaskBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9.5V13l2.5 1.5M5 3.5L2.5 6M19 3.5L21.5 6"/></svg>
+      Schedule Task
+    </button>
+
+    <div class="profile-menu" id="profileMenu">
+      <div class="menu-item" data-action="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        Settings
+      </div>
+      <div class="menu-item" data-action="theme">
+        <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+        <span id="themeLabel">Light mode</span>
+      </div>
+      <div class="menu-item" data-action="logout">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        Logout
+      </div>
+    </div>
+
+    <div class="profile-bar" id="profileBar">
+      <div class="avatar"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12a4 4 0 100-8 4 4 0 000 8zm0 2c-3.3 0-8 1.7-8 5v2h16v-2c0-3.3-4.7-5-8-5z"/></svg></div>
+      <div class="profile-info">
+        <div class="profile-name">BDS Outlets UK</div>
+        <div class="profile-tier">Titan Member</div>
+      </div>
+    </div>
+
+    <button class="collapse-btn" id="collapseBtn" title="Collapse sidebar">‹</button>
+  </aside>
+
+  <!-- ─── Main ────────────────────────────────────────────────────────────── -->
+  <main class="main">
+    <header class="topbar">
+      <div class="chat-title">Titan AI</div>
+      <div class="topbar-right">
+        <div class="auto-approve">
+          <span class="aa-label">Auto-Approve Actions</span>
+          <div class="switch" id="autoApproveSwitch"></div>
+        </div>
+        <button class="icon-btn" title="More">
+          <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="12" cy="19" r="1.7"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="messages-wrap" id="messagesWrap">
+      <div class="messages" id="messages"></div>
+    </div>
+
+    <!-- ─── Input ───────────────────────────────────────────────────────── -->
+    <div class="input-area">
+      <div class="input-inner">
+        <div class="account-anchor">
+          <div class="account-menu" id="accountMenu">
+            <div class="am-label">Select Account</div>
+          </div>
+          <div class="account-pill" id="accountPill">
+            <svg class="store" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9M4 9v10a1 1 0 001 1h14a1 1 0 001-1V9M3 9h18"/></svg>
+            <span id="accountPillName">BDS Outlets UK</span>
+            <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </div>
+        </div>
+        <div class="input-box">
+          <textarea id="input" rows="1" placeholder="Ask anything about Amazon FBA..."></textarea>
+          <button class="icon-btn" title="Attach">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+          </button>
+          <button class="send-btn" id="sendBtn" title="Send">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 12L21 3l-4 18-5-7-9-2z"/></svg>
+          </button>
+        </div>
+        <div class="disclaimer">TitanAI can make mistakes. Verify critical data.</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Auto-approve confirm modal -->
+<div class="overlay" id="autoApproveOverlay">
+  <div class="modal modal-confirm">
+    <h3>Turn on auto-approve for this session?</h3>
+    <p>Write actions like pausing a campaign or updating a bid will run without asking. You can turn this off any time.</p>
+    <div class="modal-actions">
+      <button class="btn-text" id="aaCancel">Cancel</button>
+      <button class="btn-primary" id="aaConfirm">Yes, turn on</button>
+    </div>
+  </div>
+</div>
+
+<!-- Settings modal -->
+<div class="overlay" id="settingsOverlay">
+  <div class="modal modal-settings">
+    <button class="modal-close" id="settingsClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    <div class="settings-head">
+      <svg class="gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      <div class="settings-title">Settings</div>
+    </div>
+    <div class="settings-sub">Manage your account and connected services.</div>
+    <div class="acct-card">
+      <div class="avatar avatar-initial" id="settingsAvatar">B</div>
+      <div class="acct-info">
+        <div class="acct-name">BDS Outlets UK</div>
+        <div class="acct-email">brendan@findyouphoria.com</div>
+      </div>
+      <div class="member-pill">Member</div>
+    </div>
+    <div class="settings-divider"></div>
+    <div class="linked-label">Linked Titan Tools Accounts</div>
+    <div id="linkedList"></div>
+    <div class="link-another">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+      Link Another Titan Tools Account
+    </div>
+  </div>
+</div>
+
+<!-- Edit scheduled task modal -->
+<div class="overlay" id="editOverlay">
+  <div class="modal modal-edit" id="editModal"></div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════════════════════════
+   Titan AI — simulation prototype
+   ════════════════════════════════════════════════════════════════════════ */
+
+const $  = s => document.querySelector(s);
+const node = html => { const t = document.createElement('template'); t.innerHTML = html.trim(); return t.content.firstChild; };
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+/* ── Icon strings ───────────────────────────────────────────────────────── */
+const ICON = {
+  check: '<span class="ic-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5l5 5L19.5 6.5"/></svg></span>',
+  spin:  '<span class="spin"></span>',
+  chev:  '<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>',
+  branch:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>',
+  play:  '<svg class="play" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M9 7.5l8 4.5-8 4.5V7.5z"/></svg>',
+};
+
+/* ── Data: accounts ─────────────────────────────────────────────────────── */
+const ACCOUNTS = [
+  { name: 'BDS Outlets UK',       email: 'brendan@findyouphoria.com',   linked: 'May 25' },
+  { name: 'Fifth Street Creative', email: 'fifthstreetcreative@gmail.com', linked: 'May 28' },
+];
+let activeAccount = 0;
+
+/* ── Data: recent threads ───────────────────────────────────────────────── */
+const RECENT = [
+  'Amazon Brand Growth Strategy', 'Account Performance Overview', 'PLOG Definition and Titan Lessons',
+  'Account Performance Overview', 'Account Performance Review', 'Account Status Update',
+  'Account Status Update', 'Account Performance Review', 'Account Performance Analysis',
+  'Ad Group Negative Keyword Cleanup', 'New Chat Thread', 'Account Performance Overview',
+  'Account Performance Analysis', 'New Chat Thread', 'New Chat Thread', 'New Chat Thread',
+  'Product Prioritization Strategy',
+];
+
+const SUGGESTIONS = [
+  'Help me create a brand growth strategy and identify my biggest opportunities on Amazon',
+  "What's the best campaign structure and bidding strategy for my product type?",
+  'How should I optimize my listing content — title, bullets, A+ Content — for better conversions?',
+];
+
+/* ── Data: the default agent run (matches the reference screenshots) ──────── */
+const RUN = {
+  query: 'Help me create a brand growth strategy and identify my biggest opportunities on Amazon',
+  analyzedMs: '187ms',
+  plan: 'I\'ll build this from both sides: first the current account signals, then the Titan playbook lens so the strategy is tied to measurable states instead of generic "grow more" advice. I\'ll use the last 30 complete days as the operating window unless the data says we need a longer trend.',
+  spawnTotal: '33.7s',
+  subagents: [
+    { name: 'Framework lookup',      tools: 3,  time: '20.6s', calls: ['fetch_framework: PLOG', 'titan_lessons: scaling vs optimize', 'community_feed: TACoS control'] },
+    { name: 'Account growth metrics', tools: 17, time: '23.9s', calls: ['get_account_performance_summary', 'get_account_ppc_metrics', 'get_sqp_metrics', 'get_products_summary', '+13 more calls'] },
+    { name: 'Product opportunities',  tools: 4,  time: '24.6s', calls: ['search_for_products', 'get_product_performance_summary', 'get_product_ppc_metrics', 'get_sp_bid_recommendations'] },
+    { name: 'PPC opportunities',      tools: 7,  time: '32.5s', calls: ['get_ppc_search_terms_metrics', 'get_ppc_targets_metrics', 'get_ppc_placements_metrics', 'get_ppc_negative_keywords', '+3 more calls'] },
+    { name: 'Ops and listing risk',   tools: 5,  time: '33.7s', calls: ['get_alerts', 'get_awd_inventory', 'get_awd_inbound_shipments', 'get_awd_replenishment_orders', '+1 more call'] },
+  ],
+  confirm: 'I\'ve got the result in commentary, so I\'m wondering if I still need to use wait_agent. The notification suggests the agent might have finished. Should I be calling wait_agent now to consume the result? I guess it\'s better to be safe and call wait_agent just to make sure everything\'s processed as it should be. Let\'s go ahead and do that!',
+  answerBlocks: [
+    '<p>Here\'s where I\'d focus for the next cycle, ordered by leverage — protect what\'s working, cut the obvious waste, then scale deliberately.</p>',
+    '<ol class="answer-list">' +
+      '<li><div class="li-title">Lead with your strongest engine</div><p><code>B0D1NMX2BS</code> (the broad travel-towel campaign) is carrying the catalog at efficient ACoS. Protect it and keep it funded — this is your main growth engine for the next 30 days.</p></li>' +
+      '<li><div class="li-title">Reallocate budget away from inefficiency</div><p>Several narrow campaigns are spending above their attributed sales. Shift spend out of any campaign sitting above 100% ACoS and into the efficient campaign that\'s currently capped by budget.</p></li>' +
+      '<li><div class="li-title">Harvest your proven search terms</div><p>Pull the exact terms converting at 3+ orders into a dedicated Exact campaign where you control bids and placements, instead of letting them ride inside broad/auto.</p></li>' +
+      '<li><div class="li-title">Clean up the leaks</div><p>Start with <code>quick dry towel travel</code> and <code>quick dry camp towel</code>: both spent with zero orders. These are small leaks individually, but they\'re exactly the kind of cleanup that improves TACOS without choking growth.</p></li>' +
+      '<li><div class="li-title">Recover or hold the smaller ASINs</div><p><code>B0CZZXRWWD</code> is an Optimize/Recover item: $795 revenue, $67 PPC spend, only $56 PPC sales, 120.2% ACoS, and just $17 CM3. <code>B0C5LH269K</code> is a Hold: $490 revenue, no PPC spend, $166 CM3.</p></li>' +
+      '<li><div class="li-title">Fix inventory/listing blockers before scaling harder</div><p>There were 50 alerts in the period, including 14 out-of-stock alerts and 17 listing issues. Priority SKUs include <code>ST-3272-MTGY</code>, <code>ST-3272-GRYB</code>, <code>ST-3272-DBGY</code>, and <code>ST-3272-SUNY</code>. Under PLOG, this is the unglamorous but high-leverage work: scale is only useful when the operational base can absorb it (<a href="#">Post Launch Optimization Guide</a>).</p></li>' +
+    '</ol>',
+    '<div class="answer-h">Strategy</div><p>For the next 30 days: protect stock and listing health first, shift budget from 100%+ ACoS campaigns into the out-of-budget efficient campaign, harvest winning exact terms, add obvious negatives, and treat <code>B0D1NMX2BS</code> as the main growth engine while <code>B0CZZXRWWD</code> gets efficiency repair instead of more scale.</p>',
+  ],
+  sources: [
+    { match: '48%', title: '03/27/2026 - PPC 3.0 Framework – Launch Strategy, Scaling & Data-Driven Optimization' },
+    { match: '75%', title: 'Post Launch Optimization Guide' },
+    { match: '27%', title: 'PPC 2.0 Part 3: Gaining Data Clarity' },
+  ],
+};
+
+/* ── Elements ───────────────────────────────────────────────────────────── */
+const messagesList   = $('#messages');
+const messagesScroll = $('#messagesWrap');
+const input          = $('#input');
+const sendBtn        = $('#sendBtn');
+const INPUT_MAX_H    = 200;
+let   busy           = false;   // agent running
+let   currentRun     = null;
+let   lastQuery      = RUN.query;
+let   mode           = 'chat';  // 'chat' | 'schedule' | 'scheduled-thread'
+let   scheduleDraft  = null;    // in-progress task being scheduled
+
+function scrollToBottom(smooth = true) {
+  messagesScroll.scrollTo({ top: messagesScroll.scrollHeight, behavior: smooth ? 'smooth' : 'auto' });
+}
+function autoResize() {
+  input.style.height = 'auto';
+  const next = Math.min(input.scrollHeight, INPUT_MAX_H);
+  input.style.height = next + 'px';
+  input.classList.toggle('scrollable', input.scrollHeight > INPUT_MAX_H);
+}
+function updateSendState() {
+  if (busy) return;
+  sendBtn.classList.toggle('active', input.value.trim().length > 0);
+}
+
+/* ── Sidebar recent list ────────────────────────────────────────────────── */
+function renderRecent() {
+  $('#chatList').innerHTML = RECENT.map((t, i) =>
+    `<div class="chat-item${i === 0 ? ' active' : ''}">${esc(t)}</div>`).join('');
+  $('#chatList').querySelectorAll('.chat-item').forEach(item => {
+    item.addEventListener('click', () => {
+      clearActiveNav();
+      item.classList.add('active');
+    });
+  });
+}
+
+/* ── Trace builders ─────────────────────────────────────────────────────── */
+function stepEl(label, { done = false, meta = '' } = {}) {
+  const el = node(
+    `<div class="trace-step">
+       <span class="ic">${done ? ICON.check : ICON.spin}</span>
+       <span class="label">${esc(label)}</span>
+       <span class="meta"><span class="time">${meta}</span>${ICON.chev}</span>
+     </div>`);
+  return el;
+}
+function setStepDone(el, meta) {
+  el.querySelector('.ic').innerHTML = ICON.check;
+  el.querySelector('.time').textContent = meta;
+}
+function reasonEl(text, { collapsed = false } = {}) {
+  return node(`<div class="trace-reason${collapsed ? ' collapsed' : ''}">${esc(text)}</div>`);
+}
+function subagentEl(s, { done = false } = {}) {
+  const wrap = node(
+    `<div class="subagent-wrap">
+       <div class="subagent">
+         <span class="ic">${done ? ICON.check : ICON.spin}</span>
+         <span class="branch">${ICON.branch}</span>
+         <span class="name">${esc(s.name)}</span>
+         <span class="tag">Titan Subagent</span>
+         <span class="meta"><span class="cnt">${done ? s.tools + ' tools · ' + s.time : ''}</span>${ICON.chev}</span>
+       </div>
+       <div class="sub-detail collapsed">${s.calls.map(c => `<div class="tool">${esc(c)}</div>`).join('')}</div>
+     </div>`);
+  const row = wrap.querySelector('.subagent');
+  const detail = wrap.querySelector('.sub-detail');
+  row.addEventListener('click', () => {
+    row.classList.toggle('open');
+    detail.classList.toggle('collapsed');
+  });
+  return wrap;
+}
+function setSubagentDone(wrap, s) {
+  wrap.querySelector('.ic').innerHTML = ICON.check;
+  wrap.querySelector('.cnt').textContent = s.tools + ' tools · ' + s.time;
+}
+function confirmEl(text) {
+  return node(
+    `<div class="confirm-block">
+       <div class="confirm-label">Confirming process outcomes ${ICON.chev}</div>
+       <div class="confirm-text">${esc(text)}</div>
+     </div>`);
+}
+
+/* Collapse wiring for a finished trace */
+function wireTrace(trace) {
+  const steps = trace.querySelectorAll(':scope > .trace-step');
+  const analyzed = steps[0], spawned = steps[1];
+  const reason = trace.querySelector('.trace-reason');
+  const rail = trace.querySelector('.subagents');
+  if (analyzed && reason) analyzed.addEventListener('click', () => {
+    analyzed.classList.toggle('collapsed'); reason.classList.toggle('collapsed');
+  });
+  if (spawned && rail) spawned.addEventListener('click', () => {
+    spawned.classList.toggle('collapsed'); rail.classList.toggle('collapsed');
+  });
+  const cb = trace.querySelector('.confirm-block');
+  if (cb) cb.querySelector('.confirm-label').addEventListener('click', () => cb.classList.toggle('collapsed'));
+}
+
+/* ── Sources + actions ──────────────────────────────────────────────────── */
+function sourcesEl(sources) {
+  const cards = sources.map(s =>
+    `<div class="source-card">
+       <div class="source-thumb">${ICON.play}<span class="match-badge">${s.match} Match</span></div>
+       <div class="source-body"><div class="source-type">Video</div><div class="source-title">${esc(s.title)}</div></div>
+     </div>`).join('');
+  const el = node(
+    `<div class="sources collapsed">
+       <div class="sources-header">${ICON.chev}<span>Sources (${sources.length})</span></div>
+       <div class="sources-grid">${cards}</div>
+     </div>`);
+  el.querySelector('.sources-header').addEventListener('click', () => el.classList.toggle('collapsed'));
+  return el;
+}
+function actionsEl(contentEl, query) {
+  const el = node(
+    `<div class="msg-actions">
+       <button class="act-btn" data-a="retry"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 109-9 9 9 0 00-6.4 2.6L3 8"/><path d="M3 3v5h5"/></svg>Try Again</button>
+       <button class="act-btn" data-a="copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></svg>Copy</button>
+       <button class="act-btn" data-a="schedule"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Schedule</button>
+       <button class="act-btn" data-a="up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 11v9H4a1 1 0 01-1-1v-7a1 1 0 011-1h3zm0 0l5-9a2 2 0 012 2v4h5a2 2 0 012 2.3l-1.4 6A2 2 0 0117.6 22H7"/></svg></button>
+       <button class="act-btn" data-a="down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 13V4h3a1 1 0 011 1v7a1 1 0 01-1 1h-3zm0 0l-5 9a2 2 0 01-2-2v-4H5a2 2 0 01-2-2.3l1.4-6A2 2 0 016.4 2H17"/></svg></button>
+     </div>`);
+  el.addEventListener('click', e => {
+    const btn = e.target.closest('.act-btn'); if (!btn) return;
+    const a = btn.dataset.a;
+    if (a === 'copy') {
+      navigator.clipboard && navigator.clipboard.writeText(contentEl.innerText);
+      const t = btn.querySelector('svg').outerHTML;
+      btn.innerHTML = t + 'Copied'; btn.classList.add('on');
+      setTimeout(() => { btn.innerHTML = t + 'Copy'; btn.classList.remove('on'); }, 1400);
+    } else if (a === 'retry') {
+      runAgent(lastQuery);
+    } else if (a === 'schedule') {
+      openScheduleChat(query || lastQuery);
+    } else if (a === 'up' || a === 'down') {
+      const other = a === 'up' ? 'down' : 'up';
+      el.querySelector(`[data-a="${other}"]`).classList.remove('on');
+      btn.classList.toggle('on');
+    }
+  });
+  return el;
+}
+
+/* ── User message ───────────────────────────────────────────────────────── */
+function addUserMessage(text) {
+  const wrap = node(`<div class="msg-user"><div class="bubble">${esc(text)}</div></div>`);
+  messagesList.appendChild(wrap);
+  scrollToBottom();
+}
+
+/* ── Build a fully-completed AI message (used on load) ──────────────────── */
+function buildCompletedMessage() {
+  const msg = node('<div class="msg-ai"></div>');
+  const trace = node('<div class="agent-trace"></div>');
+
+  trace.appendChild(stepEl('Analyzed the request', { done: true, meta: RUN.analyzedMs }));
+  trace.appendChild(reasonEl(RUN.plan));
+
+  const spawned = stepEl(`Spawned ${RUN.subagents.length} Titan subagents`, { done: true, meta: RUN.spawnTotal });
+  trace.appendChild(spawned);
+  const rail = node('<div class="subagents"></div>');
+  RUN.subagents.forEach(s => rail.appendChild(subagentEl(s, { done: true })));
+  rail.appendChild(confirmEl(RUN.confirm));
+  trace.appendChild(rail);
+  msg.appendChild(trace);
+  wireTrace(trace);
+
+  const content = node('<div class="ai-content"></div>');
+  content.innerHTML = RUN.answerBlocks.join('');
+  msg.appendChild(content);
+
+  msg.appendChild(actionsEl(content, RUN.query));
+  msg.appendChild(sourcesEl(RUN.sources));
+  messagesList.appendChild(msg);
+}
+
+/* ── Animated agent run ─────────────────────────────────────────────────── */
+async function runAgent(query) {
+  if (busy) return;
+  mode = 'chat';
+  input.placeholder = 'Ask anything about Amazon FBA...';
+  document.querySelectorAll('#schedList .sched-item').forEach(i => i.classList.remove('active'));
+  lastQuery = query;
+  clearWelcome();
+  addUserMessage(query);
+  setProcessing(true);
+  const run = currentRun = { cancelled: false };
+
+  const msg = node('<div class="msg-ai"></div>');
+  const trace = node('<div class="agent-trace"></div>');
+  msg.appendChild(trace);
+  messagesList.appendChild(msg);
+
+  // 1. Analyzed
+  const analyzed = stepEl('Analyzed the request');
+  trace.appendChild(analyzed); scrollToBottom();
+  await sleep(750); if (run.cancelled) return finish(run);
+  setStepDone(analyzed, RUN.analyzedMs);
+  const reason = reasonEl(RUN.plan);
+  trace.appendChild(reason); scrollToBottom();
+  await sleep(650); if (run.cancelled) return finish(run);
+
+  // 2. Spawn subagents
+  const spawned = stepEl('Spawned a Titan subagent');
+  trace.appendChild(spawned);
+  const rail = node('<div class="subagents"></div>');
+  trace.appendChild(rail); scrollToBottom();
+  const wraps = [];
+  for (let i = 0; i < RUN.subagents.length; i++) {
+    const w = subagentEl(RUN.subagents[i]);
+    rail.appendChild(w); wraps.push(w);
+    spawned.querySelector('.label').textContent =
+      `Spawned ${i + 1} Titan subagent${i ? 's' : ''}`;
+    scrollToBottom();
+    await sleep(i === 0 ? 850 : 520); if (run.cancelled) return finish(run);
+    setSubagentDone(w, RUN.subagents[i]);
+  }
+  setStepDone(spawned, RUN.spawnTotal);
+  spawned.querySelector('.label').textContent = `Spawned ${RUN.subagents.length} Titan subagents`;
+  rail.appendChild(confirmEl(RUN.confirm));
+  wireTrace(trace);
+  scrollToBottom();
+  await sleep(700); if (run.cancelled) return finish(run);
+
+  // 3. Stream the answer block by block
+  const content = node('<div class="ai-content"></div>');
+  msg.appendChild(content);
+  for (let i = 0; i < RUN.answerBlocks.length; i++) {
+    content.insertAdjacentHTML('beforeend', RUN.answerBlocks[i]);
+    const last = content.lastElementChild;
+    const cur = node('<span class="cursor"></span>');
+    last.appendChild(cur);
+    scrollToBottom();
+    await sleep(480); if (run.cancelled) { cur.remove(); return finish(run); }
+    cur.remove();
+  }
+
+  // 4. Actions + sources
+  msg.appendChild(actionsEl(content, query));
+  msg.appendChild(sourcesEl(RUN.sources));
+  finish(run);
+  scrollToBottom();
+}
+function finish(run) {
+  if (currentRun === run) currentRun = null;
+  setProcessing(false);
+}
+
+/* ── Input processing state ─────────────────────────────────────────────── */
+function setProcessing(on) {
+  busy = on;
+  if (on) {
+    input.value = ''; autoResize();
+    input.placeholder = 'Agent is processing...';
+    sendBtn.classList.add('stop', 'active');
+    sendBtn.title = 'Stop';
+    sendBtn.innerHTML = '<span class="stop-ic"></span>';
+  } else {
+    input.placeholder = 'Ask anything about Amazon FBA...';
+    sendBtn.classList.remove('stop');
+    sendBtn.title = 'Send';
+    sendBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 12L21 3l-4 18-5-7-9-2z"/></svg>';
+    updateSendState();
+  }
+}
+
+/* ── Welcome screen ─────────────────────────────────────────────────────── */
+const WELCOME_ICON =
+  '<svg class="welcome-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">' +
+  '<rect x="5" y="4" width="14" height="18" rx="2.5"/><rect x="9" y="2.5" width="6" height="3.5" rx="1"/>' +
+  '<line x1="9" y1="11" x2="15" y2="11"/><line x1="9" y1="14.5" x2="15" y2="14.5"/><line x1="9" y1="18" x2="13" y2="18"/></svg>';
+
+function renderWelcome() {
+  if (busy) { currentRun && (currentRun.cancelled = true); setProcessing(false); }
+  mode = 'chat';
+  input.placeholder = 'Ask anything about Amazon FBA...';
+  document.querySelectorAll('#chatList .chat-item, #schedList .sched-item').forEach(c => c.classList.remove('active'));
+  const cards = SUGGESTIONS.map(s =>
+    `<button class="suggestion-card" data-text="${esc(s)}"><span>${esc(s)}</span>` +
+    '<svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>').join('');
+  messagesList.innerHTML =
+    `<div class="welcome-screen">${WELCOME_ICON}` +
+    '<div class="welcome-title">Titan AI</div>' +
+    '<div class="welcome-subtitle">I\'m your expert Amazon strategist. I can help with brand strategy, PPC advertising, listing optimization, and overall business growth.</div>' +
+    `<div class="suggestion-list">${cards}</div></div>`;
+  messagesList.querySelectorAll('.suggestion-card').forEach(c =>
+    c.addEventListener('click', () => runAgent(c.dataset.text)));
+}
+function clearWelcome() {
+  const w = messagesList.querySelector('.welcome-screen');
+  if (w) messagesList.innerHTML = '';
+}
+
+/* ════ Scheduled tasks ════════════════════════════════════════════════════ */
+const SCHED_SUGGESTIONS = [
+  'Audit my PPC weekly and pause keywords spending with no sales',
+  'Check inventory daily and flag anything about to go out of stock',
+  'Send me a Monday performance digest — sales, ACoS, and TACoS',
+  'Harvest converting search terms into exact-match campaigns each week',
+  'Check my campaign budgets daily and flag anything out of budget',
+];
+const MODE_SHORT = { notify: 'Notify', approve: 'Approval', auto: 'Auto-run' };
+
+const SCHEDULED = [
+  {
+    id: 'ppc-audit', title: 'Weekly PPC waste audit',
+    instruction: 'Audit my PPC weekly and pause keywords spending with no sales',
+    freq: 'Weekly', day: 'Monday', time: '8:00 AM', mode: 'approve', enabled: true, lastRun: 'Today · 8:00 AM',
+    runs: [
+      {
+        when: 'Today · 8:00 AM',
+        summary: 'Scanned 1,240 search terms across 18 campaigns. Found <strong>6 keywords</strong> spending with zero orders in the last 30 days — queued <strong>6 pauses</strong> worth <strong>$214/mo</strong> in recovered spend.',
+        actions: [
+          { kw: 'quick dry towel travel', detail: '$67/mo · 142 clicks · 0 orders' },
+          { kw: 'quick dry camp towel',   detail: '$54/mo · 98 clicks · 0 orders'  },
+          { kw: 'microfiber towel set',   detail: '$38/mo · 76 clicks · 0 orders'  },
+          { kw: 'gym towel quick dry',    detail: '$29/mo · 61 clicks · 0 orders'  },
+          { kw: 'travel towel xl',        detail: '$16/mo · 33 clicks · 0 orders'  },
+          { kw: 'camping towel compact',  detail: '$10/mo · 21 clicks · 0 orders'  },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'oos-watch', title: 'Daily out-of-stock watch',
+    instruction: 'Check inventory daily and flag anything about to go out of stock',
+    freq: 'Daily', time: '7:00 AM', mode: 'notify', enabled: true, lastRun: 'Today · 7:00 AM',
+    runs: [
+      { when: 'Today · 7:00 AM',      summary: 'Checked 24 active SKUs. <strong>1 SKU needs a reorder.</strong> <code>ST-3272-MTGY</code> dropped to <strong>12 days of cover</strong> — below your 14-day reorder point. Reorder now to avoid a stockout around Jun 22 at current velocity. <code>ST-3272-GRYB</code> at 16 days — keep watching.' },
+      { when: 'Yesterday · 7:00 AM',  summary: 'Checked 24 active SKUs. <strong>Heads up:</strong> <code>ST-3272-MTGY</code> is at <strong>15 days of cover</strong>, just above the 14-day reorder point. <code>ST-3272-GRYB</code> dipped to 19 days. No action needed yet.' },
+      { when: 'Mon, Jun 8 · 7:00 AM', summary: 'Checked 24 active SKUs. All within thresholds, but <code>ST-3272-MTGY</code> fell to 18 days after a weekend sales spike (<strong>+38% units</strong> vs the prior week). Watching it closely.' },
+      { when: 'Sun, Jun 7 · 7:00 AM', summary: 'Checked 24 active SKUs. <strong>All clear.</strong> Closest to threshold: <code>ST-3272-MTGY</code> at 22 days of cover.' },
+      { when: 'Sat, Jun 6 · 7:00 AM', summary: 'Checked 24 active SKUs. <strong>All clear.</strong> Nothing projected to stock out within 14 days. Closest: <code>ST-3272-MTGY</code> at 26 days of cover.' },
+    ],
+  },
+];
+
+const CLOCK = '<svg class="clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+
+function renderScheduled() {
+  const list = $('#schedList');
+  list.innerHTML = SCHEDULED.map(t => {
+    const pending = (t.mode === 'approve' && t.runs) ? t.runs.reduce((n, r) => n + ((r.actions || []).filter(a => !a.resolved).length), 0) : 0;
+    return `<div class="sched-item${t.enabled === false ? ' paused' : ''}" data-id="${t.id}">${CLOCK}
+      <div class="si-body"><div class="si-name">${esc(t.title)}</div>
+        <div class="si-meta">${esc(scheduleLabel(t))}</div></div>
+      ${pending ? `<span class="si-badge">${pending}</span>` : ''}</div>`;
+  }).join('');
+  list.querySelectorAll('.sched-item').forEach(it =>
+    it.addEventListener('click', () => openScheduledThread(it.dataset.id)));
+}
+
+function clearActiveNav() {
+  document.querySelectorAll('#chatList .chat-item, #schedList .sched-item').forEach(c => c.classList.remove('active'));
+}
+
+/* ── Open the schedule-creation chat ────────────────────────────────────── */
+const SCHED_ICON =
+  '<svg class="welcome-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">' +
+  '<circle cx="12" cy="13" r="8"/><path d="M12 9.5V13l2.5 1.5M5 3.5L2.5 6M19 3.5L21.5 6"/></svg>';
+
+function openScheduleChat(prefill) {
+  if (busy) { currentRun && (currentRun.cancelled = true); setProcessing(false); }
+  mode = 'schedule';
+  scheduleDraft = null;
+  clearActiveNav();
+  input.placeholder = 'Describe a task to run on a schedule…';
+  const cards = SCHED_SUGGESTIONS.map(s =>
+    `<button class="suggestion-card" data-text="${esc(s)}"><span>${esc(s)}</span>` +
+    '<svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>').join('');
+  messagesList.innerHTML =
+    `<div class="welcome-screen">${SCHED_ICON}` +
+    '<div class="welcome-title">Schedule a task</div>' +
+    '<div class="welcome-subtitle">Tell me what to run on a schedule and how often. I\'ll keep watch and report back — or take action — every time it runs.</div>' +
+    `<div class="suggestion-list">${cards}</div></div>`;
+  messagesList.querySelectorAll('.suggestion-card').forEach(c =>
+    c.addEventListener('click', () => startScheduleFlow(c.dataset.text)));
+  if (prefill) { input.value = prefill; updateSendState(); autoResize(); input.focus(); }
+  scrollToBottom(false);
+}
+
+/* ── Conversational create flow ─────────────────────────────────────────── */
+function parseSchedule(text) {
+  const t = text.toLowerCase(), d = {};
+  const days = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+  const dayHit = days.find(dn => t.includes(dn));
+  if (/twice a day|2x a day|two times a day/.test(t)) d.freq = 'Twice a day';
+  else if (/every 15 days|every fortnight|bi-?weekly|every two weeks/.test(t)) d.freq = 'Every 15 days';
+  else if (dayHit || /weekly|every week/.test(t)) d.freq = 'Weekly';
+  else if (/every day|daily|each day/.test(t)) d.freq = 'Daily';
+  if (dayHit) d.day = dayHit.charAt(0).toUpperCase() + dayHit.slice(1);
+  const m = t.match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)/);
+  if (m) d.time = `${parseInt(m[1], 10)}:${m[2] || '00'} ${m[3].toUpperCase()}`;
+  if (/always approve|auto|automatic/.test(t)) d.mode = 'auto';
+  else if (/manual|approv|queue/.test(t)) d.mode = 'approve';
+  return d;
+}
+
+function startScheduleFlow(text) {
+  clearWelcome();
+  addUserMessage(text);
+  scheduleDraft = Object.assign({ instruction: text, freq: null, time: null, mode: null }, parseSchedule(text));
+  advanceSchedule();
+}
+
+function schedSay(html) {
+  const msg = node('<div class="msg-ai sched-msg"><div class="ai-content">' + html + '</div></div>');
+  messagesList.appendChild(msg); scrollToBottom();
+  return msg;
+}
+function schedChips(msg, chips, onPick) {
+  const row = node('<div class="sched-chips"></div>');
+  chips.forEach(c => {
+    const b = node('<button class="sched-chip">' + esc(c.label) + '</button>');
+    b.addEventListener('click', () => { row.classList.add('spent'); addUserMessage(c.label); onPick(c.value); });
+    row.appendChild(b);
+  });
+  msg.querySelector('.ai-content').appendChild(row); scrollToBottom();
+}
+
+const AP_BOLT = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>';
+const AP_HAND = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 00-4 0M14 6V4a2 2 0 00-4 0v2M10 6.5V4.5a2 2 0 00-4 0V14"/><path d="M18 8a2 2 0 114 0v6a8 8 0 01-8 8h-1a8 8 0 01-6-2.7L3.5 19"/></svg>';
+
+function scheduleLabel(d) {
+  if (d.freq === 'Daily') return `Daily · ${d.time}`;
+  if (d.freq === 'Weekly') return `Every ${d.day || 'week'} · ${d.time}`;
+  if (d.freq === 'Twice a day') return `Twice a day · ${d.time}`;
+  if (d.freq === 'Every 15 days') return `Every 15 days · ${d.time}`;
+  if (d.freq === 'Custom') return d.day ? `Every ${d.day} · ${d.time}` : `Custom · ${d.time}`;
+  return `${d.freq} · ${d.time}`;
+}
+
+function advanceSchedule() {
+  const d = scheduleDraft;
+  if (!d.freq) return askFrequency();
+  if ((d.freq === 'Weekly' || d.freq === 'Custom') && !d.day) return askDay();
+  if (!d.time) return askTime();
+  if (!d.mode) return askApproval();
+  schedConfirm(d);
+}
+
+function askFrequency() {
+  schedChips(schedSay(`Got it — I'll set up: <strong>${esc(scheduleDraft.instruction)}</strong>.<br>How often should this run?`),
+    [{label:'Daily',value:'Daily'},{label:'Weekly',value:'Weekly'},{label:'Twice a day',value:'Twice a day'},{label:'Every 15 days',value:'Every 15 days'},{label:'Custom…',value:'Custom'}],
+    v => { scheduleDraft.freq = v; advanceSchedule(); });
+}
+
+function askDay() {
+  schedChips(schedSay(`Which day of the week?`),
+    ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'].map(x => ({ label: x, value: x })),
+    v => { scheduleDraft.day = v; advanceSchedule(); });
+}
+
+function askTime() {
+  const d = scheduleDraft;
+  if (d.freq === 'Twice a day') {
+    schedChips(schedSay(`Twice a day — which two times?`),
+      [{label:'8 AM & 8 PM',value:'8:00 AM & 8:00 PM'},{label:'9 AM & 5 PM',value:'9:00 AM & 5:00 PM'},{label:'12 PM & 6 PM',value:'12:00 PM & 6:00 PM'}],
+      v => { d.time = v; advanceSchedule(); });
+  } else {
+    const when = (d.freq === 'Weekly' || (d.freq === 'Custom' && d.day)) ? `Every ${d.day}` : d.freq;
+    schedChips(schedSay(`${esc(when)} — what time?`),
+      [{label:'6:00 AM',value:'6:00 AM'},{label:'8:00 AM',value:'8:00 AM'},{label:'12:00 PM',value:'12:00 PM'},{label:'6:00 PM',value:'6:00 PM'}],
+      v => { d.time = v; advanceSchedule(); });
+  }
+}
+
+function previewActions(instr) {
+  const t = instr.toLowerCase();
+  if (/budget|pacing/.test(t)) return [
+    { label: 'Raise budget on <code>Travel Towel — Broad</code>', detail: 'out of budget · ~$40/day lost' },
+    { label: 'Cap budget on <code>SP-Auto-Catchall</code>', detail: '118% ACoS · over-pacing' },
+    { label: 'Shift $30/day → <code>Exact — quick dry towel</code>', detail: '14% ACoS · room to scale' },
+  ];
+  if (/negative|harvest|search term|exact/.test(t)) return [
+    { label: 'Add negative <code>cheap towel</code>', detail: '$22 spend · 0 orders' },
+    { label: 'Add negative <code>towel rack</code>', detail: '$15 spend · 0 orders' },
+    { label: 'Promote <code>microfiber travel towel</code> → Exact', detail: '7 orders · 18% ACoS' },
+    { label: 'Promote <code>camping towel fast dry</code> → Exact', detail: '5 orders · 21% ACoS' },
+  ];
+  if (/stock|inventory|restock/.test(t)) return [
+    { label: 'Flag restock <code>ST-3272-MTGY</code>', detail: '12 days cover · reorder now' },
+    { label: 'Flag restock <code>ST-3272-GRYB</code>', detail: '16 days cover' },
+    { label: 'Draft AWD shipment', detail: '3 SKUs · 1,400 units' },
+  ];
+  return [
+    { label: 'Pause <code>quick dry towel travel</code>', detail: '$67/mo · 0 orders' },
+    { label: 'Pause <code>quick dry camp towel</code>', detail: '$54/mo · 0 orders' },
+    { label: 'Pause <code>microfiber towel set</code>', detail: '$38/mo · 0 orders' },
+    { label: 'Lower bid on <code>gym towel quick dry</code>', detail: '92% ACoS · −$0.18' },
+  ];
+}
+
+function askApproval() {
+  const d = scheduleDraft;
+  const acts = previewActions(d.instruction);
+  const msg = schedSay(`Here's the kind of action this task will take each run — these are what need your sign-off:`);
+  const box = node('<div class="action-preview"></div>');
+  box.innerHTML =
+    acts.map(a => `<div class="ap-item"><span class="ap-ic">${AP_BOLT}</span><span class="ap-text">${a.label}</span><span class="ap-detail">${esc(a.detail)}</span></div>`).join('') +
+    '<div class="ap-hint">How should I handle these every time it runs?</div>' +
+    '<div class="ap-buttons">' +
+      '<button class="ap-always">' + AP_BOLT + 'Always approve</button>' +
+      '<button class="ap-manual">' + AP_HAND + 'Manual approve</button>' +
+    '</div>';
+  const pick = (m, label) => { const b = box.querySelector('.ap-buttons'); if (b) b.remove(); addUserMessage(label); d.mode = m; advanceSchedule(); };
+  box.querySelector('.ap-always').addEventListener('click', () => pick('auto', 'Always approve'));
+  box.querySelector('.ap-manual').addEventListener('click', () => pick('approve', 'Manual approve'));
+  msg.querySelector('.ai-content').appendChild(box);
+  scrollToBottom();
+}
+
+function shortTitle(instr) {
+  const w = instr.split(/\s+/).slice(0, 6).join(' ');
+  return w.charAt(0).toUpperCase() + w.slice(1);
+}
+
+function schedConfirm(d) {
+  const task = {
+    id: 'task-' + Math.abs(hashStr(d.instruction + d.freq + (d.day || '') + d.time)),
+    title: shortTitle(d.instruction), instruction: d.instruction,
+    freq: d.freq, day: d.day || null, time: d.time, mode: d.mode, enabled: true, lastRun: null, run: null,
+  };
+  SCHEDULED.unshift(task);
+  renderScheduled();
+  const title = d.instruction.charAt(0).toUpperCase() + d.instruction.slice(1);
+  const msg = schedSay('');
+  const card = node(
+    `<div class="sched-confirm">
+       <div class="sc-head">${ICON.check}<span>Scheduled</span></div>
+       <div class="sc-title">${esc(title)}</div>
+       <div class="sc-meta">
+         <span class="sc-when">${CLOCK} ${esc(scheduleLabel(task))}</span>
+         <span class="mode-badge ${d.mode}">${esc(MODE_SHORT[d.mode])}</span>
+       </div>
+       <div class="sc-view"><button class="sched-chip" data-open="${task.id}">View task →</button></div>
+     </div>`);
+  card.querySelector('[data-open]').addEventListener('click', () => openScheduledThread(task.id));
+  msg.querySelector('.ai-content').appendChild(card);
+  scheduleDraft = null;
+  scrollToBottom();
+}
+function hashStr(s) { let h = 0; for (let i = 0; i < s.length; i++) { h = (h * 31 + s.charCodeAt(i)) | 0; } return h; }
+
+/* ── Scheduled-task thread (config + the run with approval cards) ────────── */
+function openScheduledThread(id) {
+  const t = SCHEDULED.find(x => x.id === id); if (!t) return;
+  if (busy) { currentRun && (currentRun.cancelled = true); setProcessing(false); }
+  mode = 'scheduled-thread';
+  input.placeholder = 'Ask anything about Amazon FBA...';
+  clearActiveNav();
+  const item = document.querySelector(`#schedList .sched-item[data-id="${id}"]`); if (item) item.classList.add('active');
+  messagesList.innerHTML = '';
+
+  const statusText = () => !t.enabled ? 'Paused' : (t.lastRun ? 'Last run: ' + t.lastRun : 'Active · not run yet');
+  const head = node(
+    `<div class="sched-head"><div class="sh-top">
+       <div class="sh-title">${esc(t.title)}</div>
+       <span class="mode-badge ${t.mode}">${esc(MODE_SHORT[t.mode])}</span>
+       <div class="sh-actions">
+         <button class="icon-btn sh-edit" title="Edit task"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/></svg></button>
+         <button class="icon-btn sh-del" title="Delete task"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg></button>
+         <div class="switch sched-toggle${t.enabled ? ' on' : ''}" title="Active / paused"></div>
+       </div>
+     </div><div class="sh-meta">
+       <span class="sh-when">${CLOCK} ${esc(scheduleLabel(t))}</span>
+       <span class="sh-status">${esc(statusText())}</span>
+     </div></div>`);
+  head.querySelector('.sched-toggle').addEventListener('click', function () {
+    this.classList.toggle('on'); t.enabled = this.classList.contains('on');
+    head.querySelector('.sh-status').textContent = statusText();
+    renderScheduled();
+  });
+  head.querySelector('.sh-edit').addEventListener('click', () => openEditModal(t.id));
+  head.querySelector('.sh-del').addEventListener('click', () =>
+    confirmDialog('Delete this scheduled task?', 'It will stop running and be removed from your scheduled tasks. This can\'t be undone.', 'Delete task', () => deleteTask(t.id), true));
+  messagesList.appendChild(head);
+
+  const runs = t.runs || [];
+  if (!runs.length) {
+    messagesList.appendChild(node(`<div class="run-empty">This task hasn't run yet. Its results will appear here after the first scheduled run.</div>`));
+  }
+  runs.forEach((run, ri) => {
+    const block = node('<div class="run-block"></div>');
+    block.appendChild(node(`<div class="run-label">${ri === 0 ? 'Latest · ' : ''}${esc(run.when || 'Run')}</div>`));
+    const msg = node('<div class="msg-ai"></div>');
+    const content = node('<div class="ai-content"></div>');
+    content.innerHTML = `<p>${run.summary}</p>`;
+    msg.appendChild(content);
+    if (run.actions && run.actions.length) {
+      const wrap = node('<div class="run-actions"></div>');
+      if (t.mode === 'approve') {
+        const pending = run.actions.filter(a => !a.resolved).length;
+        const all = node(`<button class="approve-all">${ICON.check}<span>Approve all ${pending}</span></button>`);
+        all.addEventListener('click', () => {
+          wrap.querySelectorAll('.action-card:not(.approved):not(.rejected)').forEach(c => approveCard(c, run));
+          all.style.display = 'none';
+        });
+        if (pending) wrap.appendChild(all);
+      }
+      run.actions.forEach((a, idx) => wrap.appendChild(actionCard(a, idx, run)));
+      msg.appendChild(wrap);
+    }
+    block.appendChild(msg);
+    messagesList.appendChild(block);
+  });
+  scrollToBottom(false);
+}
+
+function actionCard(a, idx, run) {
+  const resolved = a.resolved;
+  const c = node(
+    `<div class="action-card${resolved ? ' approved' : ''}" data-idx="${idx}">
+       <div class="ac-body"><div class="ac-title">Pause <code>${esc(a.kw)}</code></div>
+         <div class="ac-detail">${esc(a.detail)}</div></div>
+       <div class="ac-btns">
+         <button class="ac-reject">Reject</button>
+         <button class="ac-approve">Approve &amp; pause</button>
+       </div>
+       <div class="ac-status">${resolved ? ICON.check + ' Paused' : ''}</div>
+     </div>`);
+  c.querySelector('.ac-approve').addEventListener('click', () => approveCard(c, run));
+  c.querySelector('.ac-reject').addEventListener('click', () => rejectCard(c, run));
+  return c;
+}
+function approveCard(c, run) {
+  if (c.classList.contains('approved') || c.classList.contains('rejected')) return;
+  c.classList.add('approved');
+  c.querySelector('.ac-status').innerHTML = ICON.check + ' Paused';
+  resolveAction(c, run);
+}
+function rejectCard(c, run) {
+  if (c.classList.contains('approved') || c.classList.contains('rejected')) return;
+  c.classList.add('rejected');
+  c.querySelector('.ac-status').textContent = 'Dismissed';
+  resolveAction(c, run);
+}
+function resolveAction(c, run) {
+  const idx = +c.dataset.idx;
+  if (run.actions && run.actions[idx]) run.actions[idx].resolved = true;
+  renderScheduled();
+}
+
+/* ── Edit / delete a scheduled task ─────────────────────────────────────── */
+function chipset(opts, selected) {
+  return opts.map(o => {
+    const v = Array.isArray(o) ? o[0] : o, l = Array.isArray(o) ? o[1] : o;
+    return `<button class="edit-chip${v === selected ? ' selected' : ''}" data-value="${esc(v)}">${esc(l)}</button>`;
+  }).join('');
+}
+
+const CLOSE_X = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>';
+
+function openEditModal(taskId) {
+  const t = SCHEDULED.find(x => x.id === taskId); if (!t) return;
+  const m = $('#editModal');
+  const draft = { instruction: t.instruction, freq: t.freq, day: t.day || null, time: t.time, mode: t.mode };
+  const TIMES = ['6:00 AM', '8:00 AM', '12:00 PM', '6:00 PM'];
+  const PAIRS = ['8:00 AM & 8:00 PM', '9:00 AM & 5:00 PM', '12:00 PM & 6:00 PM'];
+
+  function render() {
+    const showDay = (draft.freq === 'Weekly' || draft.freq === 'Custom');
+    const timeOpts = draft.freq === 'Twice a day' ? PAIRS : TIMES;
+    m.innerHTML =
+      `<button class="modal-close" data-x>${CLOSE_X}</button>
+       <div class="settings-title">Edit scheduled task</div>
+       <div class="settings-sub" style="margin:4px 0 18px 0">Update what runs, when, and how it's approved.</div>
+       <div class="edit-field"><label>Task</label><textarea class="edit-instr" rows="2">${esc(draft.instruction)}</textarea></div>
+       <div class="edit-field"><label>Frequency</label><div class="edit-chips" data-group="freq">${chipset(['Daily','Weekly','Twice a day','Every 15 days','Custom'], draft.freq)}</div></div>
+       ${showDay ? `<div class="edit-field"><label>Day</label><div class="edit-chips" data-group="day">${chipset(['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'], draft.day)}</div></div>` : ''}
+       <div class="edit-field"><label>Time</label><div class="edit-chips" data-group="time">${chipset(timeOpts, draft.time)}</div></div>
+       <div class="edit-field"><label>Approval</label><div class="edit-chips" data-group="mode">${chipset([['notify','Notify'],['approve','Manual approve'],['auto','Always approve']], draft.mode)}</div></div>
+       <div class="edit-actions">
+         <button class="danger-text" data-del>Delete task</button>
+         <div style="flex:1"></div>
+         <button class="btn-text" data-x>Cancel</button>
+         <button class="btn-primary" data-save>Save changes</button>
+       </div>`;
+    m.querySelectorAll('.edit-chips').forEach(group => {
+      group.querySelectorAll('.edit-chip').forEach(ch => ch.addEventListener('click', () => {
+        const g = group.dataset.group, v = ch.dataset.value;
+        if (g === 'freq') {
+          draft.freq = v;
+          if (draft.freq !== 'Weekly' && draft.freq !== 'Custom') draft.day = null;
+          draft.time = '';            // time options change with frequency
+          render(); return;
+        }
+        draft[g] = v;
+        group.querySelectorAll('.edit-chip').forEach(c => c.classList.toggle('selected', c.dataset.value === v));
+      }));
+    });
+    m.querySelectorAll('[data-x]').forEach(b => b.addEventListener('click', closeEdit));
+    m.querySelector('[data-save]').addEventListener('click', () => {
+      const instr = m.querySelector('.edit-instr').value.trim();
+      if (instr) draft.instruction = instr;
+      if (!draft.time) draft.time = draft.freq === 'Twice a day' ? PAIRS[0] : '8:00 AM';
+      Object.assign(t, {
+        instruction: draft.instruction, title: shortTitle(draft.instruction),
+        freq: draft.freq, day: draft.day, time: draft.time, mode: draft.mode,
+      });
+      closeEdit(); renderScheduled(); openScheduledThread(t.id);
+    });
+    m.querySelector('[data-del]').addEventListener('click', () =>
+      confirmDialog('Delete this scheduled task?', 'It will stop running and be removed. This can\'t be undone.', 'Delete task',
+        () => { closeEdit(); deleteTask(t.id); }, true));
+  }
+  render();
+  $('#editOverlay').classList.add('show');
+}
+function closeEdit() { $('#editOverlay').classList.remove('show'); }
+
+function deleteTask(id) {
+  const i = SCHEDULED.findIndex(x => x.id === id);
+  if (i >= 0) SCHEDULED.splice(i, 1);
+  renderScheduled();
+  renderWelcome();   // the thread is gone — return to a fresh screen
+}
+
+/* Reusable confirm dialog (dynamic overlay) */
+function confirmDialog(title, body, confirmLabel, onConfirm, danger) {
+  const ov = node(
+    `<div class="overlay show"><div class="modal modal-confirm">
+       <h3>${esc(title)}</h3><p>${esc(body)}</p>
+       <div class="modal-actions">
+         <button class="btn-text" data-x>Cancel</button>
+         <button class="btn-primary${danger ? ' danger' : ''}" data-y>${esc(confirmLabel)}</button>
+       </div></div></div>`);
+  const close = () => ov.remove();
+  ov.addEventListener('click', e => { if (e.target === ov) close(); });
+  ov.querySelector('[data-x]').addEventListener('click', close);
+  ov.querySelector('[data-y]').addEventListener('click', () => { close(); onConfirm(); });
+  document.body.appendChild(ov);
+}
+
+/* ── Account dropdown ───────────────────────────────────────────────────── */
+function renderAccountMenu() {
+  const menu = $('#accountMenu');
+  menu.querySelectorAll('.account-row').forEach(r => r.remove());
+  ACCOUNTS.forEach((a, i) => {
+    const row = node(
+      `<div class="account-row${i === activeAccount ? ' active' : ''}">
+         <svg class="store" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9M4 9v10a1 1 0 001 1h14a1 1 0 001-1V9M3 9h18"/></svg>
+         <div class="ar-info"><div class="ar-name">${esc(a.name)}</div><div class="ar-sub">Linked ${esc(a.linked)}</div></div>
+         ${i === activeAccount ? '<svg class="ar-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 6"/></svg>' : ''}
+       </div>`);
+    row.addEventListener('click', () => {
+      activeAccount = i;
+      $('#accountPillName').textContent = a.name;
+      closeAllMenus();
+      renderAccountMenu();
+      renderLinked();
+    });
+    menu.appendChild(row);
+  });
+}
+
+/* ── Settings linked accounts ───────────────────────────────────────────── */
+function renderLinked() {
+  const sa = $('#settingsAvatar'); if (sa) sa.textContent = ACCOUNTS[0].name.charAt(0);
+  $('#linkedList').innerHTML = ACCOUNTS.map(a =>
+    `<div class="linked-row">
+       <svg class="shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.6-7 9-4-1.4-7-4.5-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>
+       <div><div class="lr-name">${esc(a.name)}</div><div class="lr-email">${esc(a.email)}</div></div>
+     </div>`).join('');
+}
+
+/* ── Menus / overlays ───────────────────────────────────────────────────── */
+function closeAllMenus() {
+  $('#profileMenu').classList.remove('show');
+  $('#accountMenu').classList.remove('show');
+  $('#accountPill').classList.remove('open');
+}
+function openOverlay(id) { $(id).classList.add('show'); }
+function closeOverlay(id) { $(id).classList.remove('show'); }
+
+/* ── Wiring ─────────────────────────────────────────────────────────────── */
+function send() {
+  if (busy) { currentRun && (currentRun.cancelled = true); setProcessing(false); return; }
+  const text = input.value.trim();
+  if (!text) return;
+  if (mode === 'schedule') {
+    input.value = ''; updateSendState(); autoResize();
+    if (scheduleDraft) { addUserMessage(text); Object.assign(scheduleDraft, parseSchedule(text)); advanceSchedule(); }
+    else { startScheduleFlow(text); }
+    return;
+  }
+  runAgent(text);
+}
+
+$('#newChatBtn').addEventListener('click', renderWelcome);
+$('#scheduleTaskBtn').addEventListener('click', () => openScheduleChat());
+sendBtn.addEventListener('click', send);
+input.addEventListener('input', () => { updateSendState(); autoResize(); });
+input.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } });
+
+// Sidebar collapse
+$('#collapseBtn').addEventListener('click', () => {
+  const sb = document.querySelector('.sidebar');
+  const collapsed = sb.style.width === '0px';
+  sb.style.width = collapsed ? '232px' : '0px';
+  sb.style.padding = collapsed ? '18px 14px 12px' : '0';
+  sb.style.overflow = 'hidden';
+  $('#collapseBtn').textContent = collapsed ? '‹' : '›';
+});
+
+// Account pill
+$('#accountPill').addEventListener('click', e => {
+  e.stopPropagation();
+  const open = $('#accountMenu').classList.toggle('show');
+  $('#accountPill').classList.toggle('open', open);
+});
+
+// Profile menu
+$('#profileBar').addEventListener('click', e => {
+  e.stopPropagation();
+  $('#profileMenu').classList.toggle('show');
+});
+$('#profileMenu').addEventListener('click', e => {
+  const item = e.target.closest('.menu-item'); if (!item) return;
+  const action = item.dataset.action;
+  closeAllMenus();
+  if (action === 'settings') { renderLinked(); openOverlay('#settingsOverlay'); }
+  else if (action === 'theme') { toggleTheme(); }
+  else if (action === 'logout') { /* no-op in prototype */ }
+});
+
+function toggleTheme() {
+  const light = document.body.classList.toggle('light');
+  $('#themeLabel').textContent = light ? 'Dark mode' : 'Light mode';
+  $('#themeIcon').innerHTML = light
+    ? '<path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/>'   // moon
+    : '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>';
+}
+
+// Auto-approve switch + modal
+const aaSwitch = $('#autoApproveSwitch');
+aaSwitch.addEventListener('click', () => {
+  if (aaSwitch.classList.contains('on')) { aaSwitch.classList.remove('on'); }
+  else { openOverlay('#autoApproveOverlay'); }
+});
+$('#aaCancel').addEventListener('click', () => closeOverlay('#autoApproveOverlay'));
+$('#aaConfirm').addEventListener('click', () => { aaSwitch.classList.add('on'); closeOverlay('#autoApproveOverlay'); });
+$('#autoApproveOverlay').addEventListener('click', e => { if (e.target.id === 'autoApproveOverlay') closeOverlay('#autoApproveOverlay'); });
+
+// Settings modal
+$('#settingsClose').addEventListener('click', () => closeOverlay('#settingsOverlay'));
+$('#settingsOverlay').addEventListener('click', e => { if (e.target.id === 'settingsOverlay') closeOverlay('#settingsOverlay'); });
+$('#editOverlay').addEventListener('click', e => { if (e.target.id === 'editOverlay') closeEdit(); });
+
+// Global outside-click + ESC
+document.addEventListener('click', e => {
+  if (!e.target.closest('.profile-bar') && !e.target.closest('.profile-menu') &&
+      !e.target.closest('.account-pill') && !e.target.closest('.account-menu')) {
+    closeAllMenus();
+  }
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeAllMenus(); closeOverlay('#settingsOverlay'); closeOverlay('#autoApproveOverlay'); closeEdit(); }
+});
+
+/* ── Init ───────────────────────────────────────────────────────────────── */
+renderRecent();
+renderScheduled();
+renderAccountMenu();
+renderLinked();
+buildCompletedMessage();   // load the default conversation (matches screenshots)
+autoResize();
+scrollToBottom(false);
+</script>
+</body>
+</html>

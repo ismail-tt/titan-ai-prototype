@@ -720,27 +720,26 @@ body.light .source-thumb .play { color: rgba(0,0,0,0.28); }
 .suggestion-card .sc-txt span { font-size: 12.5px; color: var(--text-2); font-weight: 500; }
 
 /* Gallery section heading inside the conversation */
-.gallery-h { font-size: 16px; font-weight: 800; color: var(--text); margin: 30px 0 4px; display: flex; align-items: center; gap: 9px; }
+.gallery-h { font-size: 15px; font-weight: 700; color: var(--text); margin: 32px 0 4px; display: flex; align-items: center; gap: 9px; }
 .gallery-h:first-child { margin-top: 4px; }
-.gallery-h .n { width: 22px; height: 22px; border-radius: 6px; background: var(--amber); color: #1a1100; font-size: 12px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.gallery-h .n { width: 20px; height: 20px; border-radius: 6px; background: transparent; border: 1px solid var(--border); color: var(--text-3); font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
 .gallery-scn { font-size: 13.5px; color: var(--text-2); margin: 0 0 12px 31px; font-style: italic; }
 .gallery-scn b { color: var(--text); font-style: normal; }
 
 /* Chart card */
 .chart-card {
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: 14px; padding: 18px 20px 16px; margin: 0 0 6px;
+  background: none; border: none; border-radius: 0; padding: 0; margin: 0 0 4px;
 }
-.chart-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
-.chart-title { font-size: 13.5px; font-weight: 700; color: var(--text); }
+.chart-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.chart-title { font-size: 13px; font-weight: 600; color: var(--text-2); }
 .chart-sub { font-size: 11.5px; color: var(--text-3); margin-top: 2px; }
 .chart-shuffle {
   display: inline-flex; align-items: center; gap: 6px; flex-shrink: 0;
-  background: var(--bg-hover); border: 1px solid var(--border); color: var(--text-2);
-  font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 8px; cursor: pointer;
-  font-family: inherit; transition: border-color .12s, color .12s;
+  background: none; border: none; color: var(--text-3);
+  font-size: 11px; font-weight: 500; padding: 4px 2px; cursor: pointer;
+  font-family: inherit; transition: color .12s;
 }
-.chart-shuffle:hover { border-color: rgba(251,184,37,0.5); color: var(--amber); }
+.chart-shuffle:hover { color: var(--text); }
 .chart-shuffle svg { width: 13px; height: 13px; }
 .chart-body svg { display: block; width: 100%; height: auto; overflow: visible; }
 
@@ -770,12 +769,12 @@ body.light .source-thumb .play { color: rgba(0,0,0,0.28); }
 
 /* "Why this chart" note */
 .why-note {
-  display: flex; gap: 9px; margin: 12px 0 28px 0; padding: 11px 14px;
-  background: rgba(251,184,37,0.07); border: 1px solid rgba(251,184,37,0.2);
-  border-radius: 10px; font-size: 12.5px; line-height: 1.55; color: var(--text-2);
+  display: flex; gap: 8px; margin: 10px 0 30px 0; padding: 0;
+  background: none; border: none;
+  font-size: 12px; line-height: 1.6; color: var(--text-3);
 }
-.why-note b { color: var(--amber); font-weight: 700; }
-.why-note .bulb { flex-shrink: 0; width: 15px; height: 15px; color: var(--amber); margin-top: 1px; }
+.why-note b { color: var(--text-2); font-weight: 600; }
+.why-note .bulb { flex-shrink: 0; width: 14px; height: 14px; color: var(--text-3); margin-top: 1px; }
 
 /* KPI scorecard */
 .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
@@ -807,12 +806,27 @@ body.light .source-thumb .play { color: rgba(0,0,0,0.28); }
   transition: color .12s, background .12s;
 }
 .seg-btn:hover { color: var(--text-2); }
-.seg-btn.on { background: var(--amber); color: #1a1100; font-weight: 700; }
+.seg-btn.on { background: rgba(255,255,255,0.09); color: var(--text); font-weight: 600; }
 /* Grouped-columns top-right legend + hover hit areas */
 .gc-top { display: flex; align-items: center; justify-content: flex-end; gap: 16px; margin: -2px 0 10px; }
+.gc-top.gc-left { justify-content: flex-start; }
+.lg-sq { width: 11px; height: 11px; border-radius: 3px; display: inline-block; flex-shrink: 0; }
+.donut-keys { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 18px; max-width: 420px; }
+
+/* Shared hover tooltip — minimal card that follows the cursor (all charts) */
+.chart-tip {
+  position: fixed; z-index: 99999; pointer-events: none; display: none;
+  background: #15151b; border: 1px solid var(--border); border-radius: 9px; padding: 8px 11px;
+  font-size: 11.5px; color: var(--text); line-height: 1.5; box-shadow: 0 8px 24px rgba(0,0,0,0.45); max-width: 240px;
+}
+.chart-tip .t-h { font-weight: 600; margin-bottom: 3px; }
+.chart-tip .t-r { color: var(--text-2); display: flex; align-items: center; gap: 7px; }
+.chart-tip .t-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+.chart-tip b { color: var(--text); font-variant-numeric: tabular-nums; font-weight: 600; }
+body.light .chart-tip { background: #fff; }
 .gc-hit { cursor: pointer; }
 body.light .seg { background: rgba(0,0,0,0.03); }
-body.light .seg-btn.on { color: #fff; background: var(--amber); }
+body.light .seg-btn.on { color: var(--text); background: rgba(0,0,0,0.07); }
 
 /* Keyword rank table */
 .kw-table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -837,19 +851,15 @@ body.light .seg-btn.on { color: #fff; background: var(--amber); }
 .ba-chip.bad { background: rgba(239,91,91,0.15); color: #ef5b5b; }
 
 /* Bullet chart (target vs actual) */
-.bullet-row { display: flex; align-items: center; gap: 16px; margin: 4px 0 18px; }
-.bl-label { width: 116px; flex-shrink: 0; }
-.bl-label b { display: block; font-size: 13px; font-weight: 700; color: var(--text); }
-.bl-label span { font-size: 11px; color: var(--text-3); }
-.bl-track { flex: 1; position: relative; height: 30px; }
-.bl-bands { position: absolute; inset: 0; display: flex; border-radius: 7px; overflow: hidden; }
-.bl-zone-good { background: rgba(80,200,80,0.12); }
-.bl-zone-bad  { background: rgba(239,91,91,0.10); }
-.bl-measure { position: absolute; top: 9px; height: 12px; border-radius: 6px; left: 0; }
-.bl-target { position: absolute; top: 3px; height: 24px; width: 3px; background: var(--text); border-radius: 2px; box-shadow: 0 0 0 1px var(--bg-card); transform: translateX(-50%); }
-.bl-tgtline { position: absolute; top: 1px; height: 28px; width: 0; border-left: 1.5px dashed var(--text-3); opacity: .55; }
-.bl-val { position: absolute; top: -2px; font-size: 11px; font-weight: 800; font-variant-numeric: tabular-nums; transform: translateX(4px); }
-.bl-axis { position: absolute; bottom: -16px; font-size: 9.5px; color: var(--text-3); transform: translateX(-50%); }
+.bullet-row { display: flex; align-items: center; gap: 16px; margin: 0 0 16px; }
+.bl-label { width: 124px; flex-shrink: 0; }
+.bl-label b { display: block; font-size: 12.5px; font-weight: 600; color: var(--text-2); }
+.bl-label span { font-size: 10.5px; color: var(--text-3); }
+.bl-track { flex: 1; position: relative; height: 16px; }
+.bl-base { position: absolute; top: 5px; height: 6px; left: 0; right: 0; border-radius: 3px; background: rgba(255,255,255,0.06); }
+.bl-measure { position: absolute; top: 5px; height: 6px; border-radius: 3px; left: 0; }
+.bl-target { position: absolute; top: 0; height: 16px; width: 2px; border-radius: 1px; background: var(--text-2); transform: translateX(-50%); }
+.bl-val { position: absolute; top: -3px; font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; transform: translateX(6px); }
 </style>
 </head>
 <body>
@@ -1380,7 +1390,30 @@ function clearWelcome() {
    Every chart computes its geometry from its data, so it fits ANY numbers.
    ════════════════════════════════════════════════════════════════════════ */
 const PAL = ['#fbb825', '#50c850', '#e0863a', '#7e88a8', '#d65db1'];  // gold, green, warm, slate, magenta
+/* Minimal/premium palette (Jun 11 2026 redesign): calm, easy-on-the-eyes.
+   ACCENT = soft teal-green (primary), NEUTRAL = muted gray (secondary).
+   MUTED = desaturated categorical set for multi-series charts. */
+const ACCENT = '#FFCE6C', ACCENT_LT = '#FFE0A0', NEUTRAL = '#8e8e98';
+const MUTED = ['#7c83c4', '#FFCE6C', '#d68a5c', '#cf7d9e', '#8e8e98'];  // indigo, gold, orange, pink, gray
+const GRID = 'rgba(255,255,255,.05)';  // hairline gridline
 const POS = '#50c850', NEG = '#ef5b5b';
+const WIN = '#8AD18A';  // soft sage green for "wins" / healthy / on-target (pairs with ACCENT gold)
+/* Hover tooltip: append data-tip="<html>" to any element to show a cursor card. */
+const tipAttr = html => ` data-tip="${String(html).replace(/"/g, '&quot;')}"`;
+const tDot = c => `<span class="t-dot" style="background:${c}"></span>`;
+(function initChartTips() {
+  let tip;
+  const ensure = () => { if (!tip) { tip = document.createElement('div'); tip.className = 'chart-tip'; document.body.appendChild(tip); } return tip; };
+  const place = e => { const t = ensure(), pad = 14, r = t.getBoundingClientRect();
+    let x = e.clientX + pad, y = e.clientY + pad;
+    if (x + r.width > innerWidth - 8) x = e.clientX - r.width - pad;
+    if (y + r.height > innerHeight - 8) y = e.clientY - r.height - pad;
+    t.style.left = Math.max(8, x) + 'px'; t.style.top = Math.max(8, y) + 'px'; };
+  const hit = e => (e.target && e.target.closest) ? e.target.closest('[data-tip]') : null;
+  document.addEventListener('mouseover', e => { const el = hit(e); if (el) { const t = ensure(); t.innerHTML = el.getAttribute('data-tip'); t.style.display = 'block'; place(e); } });
+  document.addEventListener('mousemove', e => { if (!tip || tip.style.display !== 'block') return; hit(e) ? place(e) : (tip.style.display = 'none'); });
+  document.addEventListener('mouseout', e => { if (tip && hit(e)) tip.style.display = 'none'; });
+})();
 const rnd = (a, b) => a + Math.random() * (b - a);
 const rint = (a, b) => Math.round(rnd(a, b));
 const pick = arr => arr[Math.floor(Math.random() * arr.length)];
@@ -1451,7 +1484,7 @@ function genKpi() {
 }
 function renderKpi(m) {
   return '<div class="kpi-row">' + m.map(k => {
-    const up = k.delta >= 0, good = up !== k.goodDown, col = good ? POS : NEG;
+    const up = k.delta >= 0, good = up !== k.goodDown, col = good ? ACCENT : NEG;
     const W = 120, H = 30, max = Math.max(...k.spark), min = Math.min(...k.spark);
     const pts = k.spark.map((v, i) => [i / (k.spark.length - 1) * W, H - (max === min ? H / 2 : (v - min) / (max - min) * (H - 4) + 2)]);
     const gid = uid();
@@ -1484,9 +1517,10 @@ function genTrend() {
   const monthly = sum(sales);
   return { sales, weekly, monthly, yearly: monthly * rnd(11.4, 12.9) };
 }
-function renderTrend(d) {
-  const GOLD = PAL[0];
-  const W = 500, H = 248, L = 48, R = 10, T = 14, B = 6;
+function renderTrend(d, opts = {}) {
+  const fmt = opts.fmt || money, fmtAxis = opts.fmtAxis || moneyK;
+  const GOLD = ACCENT;
+  const W = 500, H = 252, L = 48, R = 10, T = 14, B = 26;
   const n = d.sales.length;
   const max = niceMax(Math.max(...d.sales) * 1.08);
   const xat = i => L + (W - L - R) * i / (n - 1);
@@ -1494,17 +1528,19 @@ function renderTrend(d) {
   const pts = d.sales.map((v, i) => [xat(i), yat(v)]);
   const line = smooth(pts);
   const areaD = line + ` L ${xat(n - 1).toFixed(1)} ${H - B} L ${xat(0).toFixed(1)} ${H - B} Z`;
-  const fillId = uid(), glowId = uid(), dotId = uid(), clipId = uid();
+  const fillId = uid(), glowId = uid();
 
-  // y-axis: 5 ticks (0 … max) + faint full-width gridlines — matches Figma 0/100/200/300/400
+  // y-axis: 5 ticks + faint full-width gridlines
   let grid = '';
   for (let g = 0; g <= 4; g++) {
     const y = T + (H - T - B) * g / 4, val = max * (1 - g / 4);
-    grid += `<line x1="${L}" y1="${y.toFixed(1)}" x2="${W - R}" y2="${y.toFixed(1)}" stroke="rgba(255,255,255,.08)" stroke-width="1"/>`
-      + `<text x="${L - 10}" y="${(y + 4).toFixed(1)}" text-anchor="end" font-size="12" font-weight="500" fill="var(--text-3)">${moneyK(val)}</text>`;
+    grid += `<line x1="${L}" y1="${y.toFixed(1)}" x2="${W - R}" y2="${y.toFixed(1)}" stroke="${GRID}" stroke-width="1"/>`
+      + `<text x="${L - 10}" y="${(y + 4).toFixed(1)}" text-anchor="end" font-size="12" font-weight="500" fill="var(--text-3)">${fmtAxis(val)}</text>`;
   }
-  // signature dotted band: highlight the most recent week, clipped to the area shape
-  const bStart = xat(n - 7), bEnd = xat(n - 1);
+  // x-axis: day labels every 5 days (5, 10, 15, 20, 25, 30)
+  let xlab = '';
+  [5, 10, 15, 20, 25, 30].forEach(day => { const i = day - 1; if (i < n) xlab += `<text x="${xat(i).toFixed(1)}" y="${H - 8}" text-anchor="middle" font-size="10.5" fill="var(--text-3)">${day}</text>`; });
+  const cw = (W - L - R) / (n - 1);
 
   return `<svg viewBox="0 0 ${W} ${H}" style="display:block;width:100%">
     <defs>
@@ -1513,20 +1549,17 @@ function renderTrend(d) {
         <stop offset="0.55" stop-color="${GOLD}" stop-opacity="0.11"/>
         <stop offset="1" stop-color="${GOLD}" stop-opacity="0"/>
       </linearGradient>
-      <filter id="${glowId}" x="-8%" y="-40%" width="116%" height="180%"><feGaussianBlur stdDeviation="2.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-      <pattern id="${dotId}" width="9" height="9" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.15" fill="${GOLD}" opacity="0.65"/></pattern>
-      <clipPath id="${clipId}"><path d="${areaD}"/></clipPath>
+      <filter id="${glowId}" x="-8%" y="-40%" width="116%" height="180%"><feGaussianBlur stdDeviation="0.9" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
     </defs>
-    ${grid}
+    ${grid}${xlab}
     <path d="${areaD}" fill="url(#${fillId})"/>
-    <rect x="${bStart.toFixed(1)}" y="${T}" width="${(bEnd - bStart).toFixed(1)}" height="${H - T - B}" fill="url(#${dotId})" clip-path="url(#${clipId})"/>
-    <line x1="${bStart.toFixed(1)}" y1="${(H - B + 1).toFixed(1)}" x2="${bEnd.toFixed(1)}" y2="${(H - B + 1).toFixed(1)}" stroke="${GOLD}" stroke-width="2.5" stroke-linecap="round"/>
-    <path d="${line}" fill="none" stroke="${GOLD}" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round" filter="url(#${glowId})"/>
+    <path d="${line}" fill="none" stroke="${GOLD}" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" filter="url(#${glowId})"/>
+    ${d.sales.map((v, i) => `<rect x="${(xat(i) - cw / 2).toFixed(1)}" y="${T}" width="${cw.toFixed(1)}" height="${H - T - B}" fill="transparent"${tipAttr(`<div class="t-h">Day ${i + 1}</div><b>${fmt(v)}</b>`)}/>`).join('')}
   </svg>
   <div class="trend-stats">
-    ${statCol('#50c850', 'This week', money(d.weekly))}
-    ${statCol('#fbb825', 'This month', money(d.monthly))}
-    ${statCol('#ef5b5b', 'Projected year', money(d.yearly))}
+    ${statCol(ACCENT, 'This week', fmt(d.weekly))}
+    ${statCol(NEUTRAL, 'This month', fmt(d.monthly))}
+    ${statCol(MUTED[2], 'Daily avg', fmt(d.monthly / 30))}
   </div>`;
 }
 
@@ -1573,34 +1606,33 @@ function genDonut() {
   const totalSales = rnd(48000, 145000);
   const sp = rnd(40, 62), sb = rnd(14, 26), sd = rnd(6, 16), org = Math.max(8, 100 - sp - sb - sd);
   const slices = [
-    { label: 'Sponsored Products', pct: sp,  color: PAL[0] },
-    { label: 'Sponsored Brands',   pct: sb,  color: PAL[1] },
-    { label: 'Sponsored Display',  pct: sd,  color: PAL[2] },
-    { label: 'Organic',            pct: org, color: PAL[3] },
+    { label: 'Sponsored Products', pct: sp,  color: MUTED[0] },
+    { label: 'Sponsored Brands',   pct: sb,  color: MUTED[1] },
+    { label: 'Sponsored Display',  pct: sd,  color: MUTED[2] },
+    { label: 'Organic',            pct: org, color: MUTED[4] },
   ];
   const sum = slices.reduce((a, x) => a + x.pct, 0);
   slices.forEach(x => { x.pct = x.pct / sum * 100; x.value = totalSales * x.pct / 100; });
   return { slices, totalSales };
 }
 function renderDonut(d) {
-  const s = d.slices, cx = 100, cy = 100, r = 66, gap = 3;
-  let acc = 0, segs = '';
+  const s = d.slices, cx = 100, cy = 100, r = 66;
+  let acc = 0, segs = '', pctLabels = '';
   s.forEach(x => {
-    const start = acc / 100 * 360, end = (acc + x.pct) / 100 * 360; acc += x.pct;
-    segs += `<path d="${arcPath(cx, cy, r, start + gap / 2, end - gap / 2)}" fill="none" stroke="${x.color}" stroke-width="24" stroke-linecap="round"/>`;
+    const start = acc / 100 * 360, end = (acc + x.pct) / 100 * 360, mid = (start + end) / 2; acc += x.pct;
+    // thick band, sharp (butt) edges, no gaps — segments meet flush like the reference
+    segs += `<path d="${arcPath(cx, cy, r, start, end)}" fill="none" stroke="${x.color}" stroke-width="34"${tipAttr(`<div class="t-h">${x.label}</div><b>${money(x.value)}</b> · ${x.pct.toFixed(0)}%`)}/>`;
+    const [lx, ly] = polar(cx, cy, r, mid);  // % centered inside the thick band
+    pctLabels += `<text x="${lx.toFixed(1)}" y="${(ly + 4).toFixed(1)}" text-anchor="middle" font-size="12" font-weight="700" fill="#2a2a2e">${x.pct.toFixed(0)}%</text>`;
   });
   const adPct = (100 - s[s.length - 1].pct).toFixed(0);
-  const legend = s.map(x =>
-    `<div style="display:flex;align-items:center;gap:10px;margin-bottom:13px;">
-       <span class="lg-dot" style="background:${x.color};border-radius:50%"></span>
-       <span style="font-size:12.5px;color:var(--text-2);flex:1;">${x.label}</span>
-       <b style="font-size:13px;color:var(--text);font-variant-numeric:tabular-nums;">${money(x.value)}</b>
-       <span style="font-size:11.5px;color:var(--text-3);width:34px;text-align:right;">${x.pct.toFixed(0)}%</span></div>`).join('');
-  return `<div style="display:flex;align-items:center;gap:26px;flex-wrap:wrap;">
-    <svg viewBox="0 0 200 200" style="width:184px;flex-shrink:0;">${segs}
+  const keys = s.map(x =>
+    `<span class="lg-item"><span class="lg-sq" style="background:${x.color};border-radius:50%"></span>${x.label}</span>`).join('');
+  return `<div style="display:flex;flex-direction:column;align-items:center;gap:18px;">
+    <svg viewBox="0 0 200 200" style="width:240px;">${segs}${pctLabels}
       <text x="${cx}" y="${cy - 4}" text-anchor="middle" font-size="11.5" fill="var(--text-3)">Ad-attributed</text>
       <text x="${cx}" y="${cy + 18}" text-anchor="middle" font-size="22" font-weight="800" fill="var(--text)">${adPct}%</text></svg>
-    <div style="flex:1;min-width:210px;">${legend}</div></div>`;
+    <div class="donut-keys">${keys}</div></div>`;
 }
 
 /* ── 5. Ranked bars — top search terms by spend. Faithful to Figma "Popular
@@ -1613,7 +1645,8 @@ function genRank() {
   return terms.map(t => ({ label: t, value: rnd(120, 900), orders: rint(0, 22) }))
     .sort((a, b) => b.value - a.value).slice(0, 6);
 }
-function renderRank(items) {
+function renderRank(items, opts = {}) {
+  const fmt = opts.fmt || money, fmtAxis = opts.fmtAxis || moneyK;
   const W = 560, rowH = 34, padT = 6, padB = 26, LBL = 150, R = 92;
   const H = padT + items.length * rowH + padB;
   const barL = LBL + 8, barMax = W - R - barL;
@@ -1623,16 +1656,16 @@ function renderRank(items) {
   let grid = '';
   for (let g = 0; g <= 4; g++) {
     const v = max * g / 4, x = xat(v);
-    grid += `<line x1="${x.toFixed(1)}" y1="${padT}" x2="${x.toFixed(1)}" y2="${(H - padB).toFixed(1)}" stroke="rgba(255,255,255,.07)" stroke-width="1"/>`
-      + `<text x="${x.toFixed(1)}" y="${(H - padB + 16).toFixed(1)}" text-anchor="middle" font-size="11" fill="var(--text-3)">${moneyK(v)}</text>`;
+    grid += `<line x1="${x.toFixed(1)}" y1="${padT}" x2="${x.toFixed(1)}" y2="${(H - padB).toFixed(1)}" stroke="${GRID}" stroke-width="1"/>`
+      + `<text x="${x.toFixed(1)}" y="${(H - padB + 16).toFixed(1)}" text-anchor="middle" font-size="11" fill="var(--text-3)">${fmtAxis(v)}</text>`;
   }
   let rows = '';
   items.forEach((it, i) => {
-    const cy = padT + i * rowH + rowH / 2, dead = it.orders === 0, col = dead ? NEG : PAL[0];
-    const bw = Math.max(6, xat(it.value) - barL), bh = 16;
+    const cy = padT + i * rowH + rowH / 2, dead = it.orders === 0, col = dead ? NEG : ACCENT;
+    const bw = Math.max(6, xat(it.value) - barL), bh = 12;
     rows += `<text x="${LBL}" y="${(cy + 4).toFixed(1)}" text-anchor="end" font-size="12" fill="var(--text-2)">${esc(it.label.length > 22 ? it.label.slice(0, 21) + '…' : it.label)}</text>`
-      + `<rect x="${barL}" y="${(cy - bh / 2).toFixed(1)}" width="${bw.toFixed(1)}" height="${bh}" rx="${bh / 2}" fill="${col}"/>`
-      + `<text x="${(barL + bw + 8).toFixed(1)}" y="${(cy + 4).toFixed(1)}" font-size="11" font-weight="700" fill="var(--text-2)" font-variant-numeric="tabular-nums">${money(it.value)} · ${it.orders}o${dead ? ' <tspan fill="' + NEG + '">leak</tspan>' : ''}</text>`;
+      + `<rect x="${barL}" y="${(cy - bh / 2).toFixed(1)}" width="${bw.toFixed(1)}" height="${bh}" rx="${bh / 2}" fill="${col}"${tipAttr(`<div class="t-h">${it.label}</div><b>${fmt(it.value)}</b> · ${it.orders} orders${dead ? ' · <span style="color:' + NEG + '">leak</span>' : ''}`)}/>`
+      + `<text x="${(barL + bw + 8).toFixed(1)}" y="${(cy + 4).toFixed(1)}" font-size="11" fill="var(--text-3)" font-variant-numeric="tabular-nums">${fmtAxis(it.value)}${dead ? ' <tspan fill="' + NEG + '">· leak</tspan>' : ''}</text>`;
   });
   return `<svg viewBox="0 0 ${W} ${H}" style="display:block;width:100%">${grid}${rows}</svg>`;
 }
@@ -1674,32 +1707,31 @@ function genFunnel() {
     { label: 'Purchases',   value: buy },
   ];
 }
-/* Faithful to Figma "Funnel summary" (43:30225): a horizontal tapering area
-   ribbon, stage value on top + % of impressions at the bottom. Gold→green
-   gradient; later stages keep a min height so the big impressions→purchase
-   drop stays readable. */
-function renderFunnel(st) {
-  const W = 560, H = 244, L = 8, R = 8, T = 54, B = 38;
-  const plotW = W - L - R, plotH = H - T - B, baseY = T + plotH, cy = T + plotH / 2;
-  const max = st[0].value, n = st.length, segW = plotW / n;
-  const hAt = v => Math.max(18, v / max * plotH);
-  const cxs = st.map((s, i) => L + segW * i + segW / 2);
-  const X = [L, ...cxs, W - R], Hs = [hAt(st[0].value), ...st.map(s => hAt(s.value)), hAt(st[n - 1].value)];
-  let top = '', bot = '';
-  X.forEach((x, i) => { top += `${i ? 'L' : 'M'}${x.toFixed(1)} ${(cy - Hs[i] / 2).toFixed(1)} `; });
-  for (let i = X.length - 1; i >= 0; i--) bot += `L${X[i].toFixed(1)} ${(cy + Hs[i] / 2).toFixed(1)} `;
-  const gid = uid();
-  let lbl = '';
+/* Vertical stacked-trapezoid funnel: each stage's width is proportional to its
+   value so the shape itself shows drop-off. The trapezoid stack is centered in
+   the SVG; labels sit off to the right via short leader lines, not centered
+   with the shape. */
+function renderFunnel(st, opts = {}) {
+  const fmt = opts.fmt || (v => Math.round(v).toLocaleString());
+  const n = st.length, W = 560, padT = 8, bandH = 42, gap = 10;
+  const H = padT + n * bandH + (n - 1) * gap + 8;
+  const cx = W / 2, maxW = 220, minW = 6, max = st[0].value;
+  const stageW = st.map(s => Math.max(minW, maxW * (s.value / max)));
+  const levelW = stageW.concat(stageW[stageW.length - 1]);
+  const labelX = cx + maxW / 2 + 22;
+  let bands = '', labels = '';
   st.forEach((s, i) => {
-    const x = cxs[i], pct = s.value / max * 100;
-    lbl += `<text x="${x.toFixed(1)}" y="20" text-anchor="middle" font-size="11" fill="var(--text-3)">${s.label}</text>`
-      + `<text x="${x.toFixed(1)}" y="40" text-anchor="middle" font-size="15" font-weight="800" fill="var(--text)">${Math.round(s.value).toLocaleString()}</text>`
-      + `<text x="${x.toFixed(1)}" y="${H - 12}" text-anchor="middle" font-size="13" font-weight="700" fill="${i === 0 ? PAL[0] : PAL[1]}">${pct >= 10 ? pct.toFixed(0) : pct.toFixed(1)}%</text>`
-      + (i ? `<line x1="${(L + segW * i).toFixed(1)}" y1="${T}" x2="${(L + segW * i).toFixed(1)}" y2="${baseY}" stroke="rgba(255,255,255,.07)"/>` : '');
+    const y = padT + i * (bandH + gap), tw = levelW[i], bw = levelW[i + 1];
+    const op = (0.95 - i * 0.13).toFixed(2);
+    const pct = s.value / max * 100;
+    const pctStr = pct >= 10 ? pct.toFixed(0) : pct.toFixed(1);
+    bands += `<path d="M ${(cx - tw / 2).toFixed(1)} ${y} L ${(cx + tw / 2).toFixed(1)} ${y} L ${(cx + bw / 2).toFixed(1)} ${y + bandH} L ${(cx - bw / 2).toFixed(1)} ${y + bandH} Z" fill="${ACCENT}" fill-opacity="${op}"${tipAttr(`<div class="t-h">${esc(s.label)}</div><b>${fmt(s.value)}</b> · ${pctStr}%`)}/>`;
+    const midY = y + bandH / 2, edge = cx + tw / 2;
+    labels += `<line x1="${edge.toFixed(1)}" y1="${midY.toFixed(1)}" x2="${(labelX - 8).toFixed(1)}" y2="${midY.toFixed(1)}" stroke="${GRID}"/>`
+      + `<text x="${labelX}" y="${(midY - 2).toFixed(1)}" font-size="12" font-weight="600" fill="var(--text-2)">${esc(s.label)}</text>`
+      + `<text x="${labelX}" y="${(midY + 13).toFixed(1)}" font-size="11" fill="var(--text-3)">${fmt(s.value)} · ${pctStr}%</text>`;
   });
-  return `<svg viewBox="0 0 ${W} ${H}" style="display:block;width:100%">
-    <defs><linearGradient id="${gid}" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${PAL[0]}" stop-opacity=".9"/><stop offset="1" stop-color="${PAL[1]}" stop-opacity=".75"/></linearGradient></defs>
-    <path d="${top}${bot}Z" fill="url(#${gid})"/>${lbl}</svg>`;
+  return `<svg viewBox="0 0 ${W} ${H}" style="display:block;width:100%">${bands}${labels}</svg>`;
 }
 
 /* ── 8. Before / after — optimization impact ──────────────────────────────── */
@@ -1727,30 +1759,75 @@ function genGauge() {
 function renderGauge(d) {
   const cx = 100, cy = 100, r = 76, A0 = -135, SPAN = 270;
   const frac = Math.min(1, d.days / d.max);
-  const col = d.days < d.reorder ? NEG : d.days < d.reorder * 1.5 ? PAL[0] : POS;
+  const col = d.days < d.reorder ? NEG : d.days < d.reorder * 1.5 ? MUTED[2] : ACCENT;
   const status = d.days < d.reorder ? 'Reorder now' : d.days < d.reorder * 1.5 ? 'Watch closely' : 'Healthy';
   const valDeg = A0 + frac * SPAN;                       // angle of the current value
   const dangerDeg = A0 + (d.reorder / d.max) * SPAN;     // end of the reorder danger zone
   // white marker sits at the VALUE (end of the fill) — follows the percentage
   const [mx1, my1] = polar(cx, cy, r + 12, valDeg), [mx2, my2] = polar(cx, cy, r - 12, valDeg);
   const gid = uid(), gl = uid();
-  return `<div style="display:flex;align-items:center;gap:28px;flex-wrap:wrap;">
-    <svg viewBox="0 0 200 190" style="width:200px;flex-shrink:0;">
+  return `<div style="display:flex;align-items:center;justify-content:center;gap:34px;flex-wrap:wrap;">
+    <svg viewBox="0 0 200 190" style="width:240px;flex-shrink:0;">
       <defs>
         <linearGradient id="${gid}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${col}" stop-opacity="0.6"/><stop offset="1" stop-color="${col}"/></linearGradient>
-        <filter id="${gl}" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <filter id="${gl}" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.1" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
       </defs>
-      <path d="${arcPath(cx, cy, r, A0, A0 + SPAN)}" fill="none" stroke="var(--bg-elev)" stroke-width="15" stroke-linecap="round"/>
-      <path d="${arcPath(cx, cy, r, A0, valDeg)}" fill="none" stroke="url(#${gid})" stroke-width="15" stroke-linecap="round" filter="url(#${gl})"/>
-      <path d="${arcPath(cx, cy, r, A0, dangerDeg)}" fill="none" stroke="${NEG}" stroke-width="15" stroke-linecap="round" opacity="0.32"/>
+      <path d="${arcPath(cx, cy, r, A0, A0 + SPAN)}" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="11" stroke-linecap="round"/>
+      <path d="${arcPath(cx, cy, r, A0, valDeg)}" fill="none" stroke="${col}" stroke-width="11" stroke-linecap="round" filter="url(#${gl})"${tipAttr(`<div class="t-h">${d.sku}</div><b>${d.days} days</b> of cover · ${status}`)}/>
+      <path d="${arcPath(cx, cy, r, A0, dangerDeg)}" fill="none" stroke="${NEG}" stroke-width="11" stroke-linecap="round" opacity="0.28"/>
       <line x1="${mx1.toFixed(1)}" y1="${my1.toFixed(1)}" x2="${mx2.toFixed(1)}" y2="${my2.toFixed(1)}" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
       <text x="${cx}" y="${cy - 4}" text-anchor="middle" font-size="40" font-weight="800" fill="var(--text)">${d.days}</text>
       <text x="${cx}" y="${cy + 18}" text-anchor="middle" font-size="12" fill="var(--text-3)">days of cover</text></svg>
-    <div style="flex:1;min-width:160px;font-size:13px;color:var(--text-2);line-height:1.7;">
+    <div style="min-width:160px;max-width:230px;font-size:13px;color:var(--text-2);line-height:1.7;">
       <div style="font-weight:700;color:var(--text);margin-bottom:6px;font-size:14px;">${d.sku}</div>
       Days of cover: <b style="color:${col}">${d.days} days</b> <span style="color:var(--text-3)">(white mark)</span><br>
       Reorder point: <b style="color:var(--text)">${d.reorder} days</b> <span style="color:${NEG}">(red zone)</span><br>
       Status: <b style="color:${col}">${status}</b></div></div>`;
+}
+
+/* ── 9b. Gauge v2 — generic, minimal, arc-end labels, slim status line ───── */
+function genGauge2() {
+  const days = rint(6, 60), reorder = 14;
+  const sku = pick(['ST-3272-MTGY', 'ST-3272-GRYB', 'ST-3272-DBGY']);
+  return { title: sku, value: days, max: 60, threshold: reorder, label: 'days of cover', unit: 'days' };
+}
+function renderGauge2(d, opts={}) {
+  const title = d.title || d.sku || '';
+  const value = d.value ?? d.days;
+  const max = d.max;
+  const threshold = d.threshold ?? d.reorder;
+  const label = d.label || 'days of cover';
+  const unit = d.unit || 'days';
+  const cx = 110, cy = 105, r = 82, A0 = -135, SPAN = 270;
+  const frac = Math.min(1, value / max);
+  const col = value < threshold ? NEG : value < threshold * 1.5 ? MUTED[2] : WIN;
+  const status = value < threshold ? 'Reorder now' : value < threshold * 1.5 ? 'Watch closely' : 'Healthy';
+  const valDeg = A0 + frac * SPAN;
+  const dangerDeg = A0 + (threshold / max) * SPAN;
+  const [mx1, my1] = polar(cx, cy, r + 13, valDeg);
+  const [mx2, my2] = polar(cx, cy, r - 13, valDeg);
+  const [lx0, ly0] = polar(cx, cy, r + 22, A0);
+  const [lx1, ly1] = polar(cx, cy, r + 22, A0 + SPAN);
+  const gl = uid();
+  return `<div style="display:flex;flex-direction:column;align-items:center;gap:12px;">
+    <svg viewBox="0 0 220 195" style="width:260px;flex-shrink:0;">
+      <defs><filter id="${gl}" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="1.1" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+      <path d="${arcPath(cx, cy, r, A0, A0 + SPAN)}" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="12" stroke-linecap="round"/>
+      <path d="${arcPath(cx, cy, r, A0, dangerDeg)}" fill="none" stroke="${NEG}" stroke-width="12" stroke-linecap="round" opacity="0.22"/>
+      <path d="${arcPath(cx, cy, r, A0, valDeg)}" fill="none" stroke="${col}" stroke-width="12" stroke-linecap="round" filter="url(#${gl})"${tipAttr(`<b>${value} ${unit}</b> · ${status}`)}/>
+      <line x1="${mx1.toFixed(1)}" y1="${my1.toFixed(1)}" x2="${mx2.toFixed(1)}" y2="${my2.toFixed(1)}" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+      <text x="${cx}" y="${cy - 4}" text-anchor="middle" font-size="44" font-weight="800" fill="var(--text)">${value}</text>
+      <text x="${cx}" y="${cy + 20}" text-anchor="middle" font-size="11" fill="var(--text-3)">${label}</text>
+      <text x="${lx0.toFixed(1)}" y="${(ly0 + 4).toFixed(1)}" text-anchor="middle" font-size="10" fill="var(--text-3)">0</text>
+      <text x="${lx1.toFixed(1)}" y="${(ly1 + 4).toFixed(1)}" text-anchor="middle" font-size="10" fill="var(--text-3)">${max}</text>
+    </svg>
+    <div style="text-align:center;font-size:13px;color:var(--text-2);">
+      <span style="font-weight:600;color:var(--text)">${title}</span>
+      <span style="margin:0 8px;color:var(--text-3)">·</span>
+      <b style="color:${col}">${status}</b>
+      <span style="color:var(--text-3);font-size:12px;margin-left:8px;">reorder &lt; ${threshold} ${unit}</span>
+    </div>
+  </div>`;
 }
 
 /* ── 10. Bullet chart — efficiency targets (actual vs target, Figma) ──────── */
@@ -1766,25 +1843,17 @@ function genBullet() {
 function renderBullet(rows) {
   return rows.map(r => {
     const meet = r.good === 'low' ? r.value <= r.target : r.value >= r.target;
-    const col = meet ? POS : (r.good === 'low' ? (r.value > r.target * 1.25 ? NEG : PAL[0]) : (r.value < r.target * 0.7 ? NEG : PAL[0]));
+    const col = meet ? ACCENT : MUTED[2];  // gold when on target, soft orange when off — no harsh zones
     const wPct = Math.min(100, r.value / r.max * 100), tPct = r.target / r.max * 100;
     const fmt = v => (r.label === 'CTR' ? v.toFixed(2) : v.toFixed(1)) + '%';
-    // zones: good side vs bad side split at target
-    const goodLeft = r.good === 'low';
-    const ticks = [0, 0.5, 1].map(f => `<span class="bl-axis" style="left:${f * 100}%">${fmt(r.max * f)}</span>`).join('');
-    const gid = uid();
+    const valPos = Math.min(wPct, 84);  // keep the value label on-screen for long bars
     return `<div class="bullet-row">
       <div class="bl-label"><b>${r.label}</b><span>${r.unit}</span></div>
-      <div class="bl-track">
-        <div class="bl-bands">
-          <div class="${goodLeft ? 'bl-zone-good' : 'bl-zone-bad'}" style="width:${tPct}%"></div>
-          <div class="${goodLeft ? 'bl-zone-bad' : 'bl-zone-good'}" style="width:${100 - tPct}%"></div>
-        </div>
-        <div class="bl-measure" style="width:${wPct}%;background:linear-gradient(90deg,${col}99,${col});box-shadow:0 0 10px ${col}66;"></div>
-        <div class="bl-tgtline" style="left:${tPct}%"></div>
-        <div class="bl-target" style="left:${wPct}%"></div>
-        <div class="bl-val" style="left:${wPct}%;color:${col}">${fmt(r.value)}</div>
-        ${ticks}
+      <div class="bl-track"${tipAttr(`<div class="t-h">${r.label}</div>Actual <b style="color:${col}">${fmt(r.value)}</b><br><span style="color:var(--text-3)">${r.unit}</span> · ${meet ? 'on target' : 'off target'}`)}>
+        <div class="bl-base"></div>
+        <div class="bl-measure" style="width:${wPct}%;background:${col}"></div>
+        <div class="bl-target" style="left:${tPct}%"></div>
+        <div class="bl-val" style="left:${valPos}%;color:${col}">${fmt(r.value)}</div>
       </div></div>`;
   }).join('');
 }
@@ -1800,41 +1869,40 @@ function genMonthBars() {
   // Amazon seasonality: soft start, summer bump, Q4 (Nov/Dec) peak
   const season = [0.72, 0.78, 0.9, 0.82, 0.96, 1.04, 0.9, 0.85, 0.95, 0.92, 1.18, 1.34];
   const base = rnd(13000, 24000);
-  const months = MONTH_LABELS.map((m, i) => ({ m, v: Math.max(2500, base * season[i] * rnd(0.82, 1.16)) }));
-  return { months, period: 'Annual' };
+  const items = MONTH_LABELS.map((m, i) => ({ label: m, value: Math.max(2500, base * season[i] * rnd(0.82, 1.16)) }));
+  return { items, period: 'Annual' };
 }
-function renderMonthBars(d) {
+function renderMonthBars(d, opts = {}) {
+  const fmt = opts.fmt || money, fmtAxis = opts.fmtAxis || moneyK;
   const period = d.period || 'Annual';
   const count = period === 'Quarter' ? 3 : period === 'Semester' ? 6 : 12;
-  const months = d.months.slice(-count);
-  const GOLD = PAL[0], STEPS = 5;
-  const max = axisMax(Math.max(...months.map(x => x.v)) * 1.02, STEPS);
+  const months = (d.items || []).slice(-count);
+  const GOLD = ACCENT, STEPS = 6;
+  const max = axisMax(Math.max(...months.map(x => x.value)) * 1.02, STEPS);
 
   const W = 560, H = 248, L = 46, R = 14, T = 12, B = 30;
   const plotW = W - L - R, plotH = H - T - B, baseY = H - B;
-  const slot = plotW / count, bw = Math.min(16, slot * 0.4), rx = Math.min(4, bw / 2);
+  const slot = plotW / count, bw = 4, rx = 2;  // thin 4px lines, fully rounded ends (Figma "Online users")
   const xat = i => L + slot * (i + 0.5);
 
   let grid = '';
   for (let g = 0; g <= STEPS; g++) {
     const y = T + plotH * g / STEPS, val = Math.round(max * (1 - g / STEPS));
-    grid += `<line x1="${L}" y1="${y.toFixed(1)}" x2="${W - R}" y2="${y.toFixed(1)}" stroke="rgba(255,255,255,.08)" stroke-width="1" stroke-dasharray="4 5"/>`
-      + `<text x="${L - 12}" y="${(y + 4).toFixed(1)}" text-anchor="end" font-size="12" font-weight="500" fill="var(--text-3)">${moneyK(val)}</text>`;
+    grid += `<line x1="${L}" y1="${y.toFixed(1)}" x2="${W - R}" y2="${y.toFixed(1)}" stroke="${GRID}" stroke-width="1" stroke-dasharray="4 4"/>`
+      + `<text x="${L - 12}" y="${(y + 4).toFixed(1)}" text-anchor="end" font-size="12" font-weight="500" fill="var(--text-3)">${fmtAxis(val)}</text>`;
   }
-  const gid = uid();
   let bars = '', labels = '';
   months.forEach((mo, i) => {
-    const cx = xat(i) - bw / 2, fh = Math.max(2, mo.v / max * plotH);
-    bars += `<rect x="${cx.toFixed(1)}" y="${T}" width="${bw.toFixed(1)}" height="${plotH}" rx="${rx}" fill="rgba(255,255,255,.07)"/>`
-      + `<rect x="${cx.toFixed(1)}" y="${(baseY - fh).toFixed(1)}" width="${bw.toFixed(1)}" height="${fh.toFixed(1)}" rx="${rx}" fill="url(#${gid})"/>`;
-    labels += `<text x="${xat(i).toFixed(1)}" y="${H - 9}" text-anchor="middle" font-size="10.5" font-weight="600" letter-spacing="0.5" fill="var(--text-3)">${mo.m}</text>`;
+    const cx = xat(i) - bw / 2, fh = Math.max(bw, mo.value / max * plotH);
+    bars += `<rect x="${cx.toFixed(1)}" y="${T}" width="${bw}" height="${plotH}" rx="${rx}" fill="rgba(255,255,255,.10)"/>`
+      + `<rect x="${cx.toFixed(1)}" y="${(baseY - fh).toFixed(1)}" width="${bw}" height="${fh.toFixed(1)}" rx="${rx}" fill="${GOLD}"/>`
+      + `<rect x="${(xat(i) - slot / 2).toFixed(1)}" y="${T}" width="${slot.toFixed(1)}" height="${plotH}" fill="transparent"${tipAttr(`<div class="t-h">${mo.label}</div><b>${fmt(mo.value)}</b>`)}/>`;
+    labels += `<text x="${xat(i).toFixed(1)}" y="${H - 9}" text-anchor="middle" font-size="10.5" font-weight="600" letter-spacing="0.5" fill="var(--text-3)">${mo.label}</text>`;
   });
 
   return `<div class="mbars-top"><div class="seg">${['Quarter', 'Semester', 'Annual']
       .map(p => `<button class="seg-btn${p === period ? ' on' : ''}" data-period="${p}">${p}</button>`).join('')}</div></div>
     <svg viewBox="0 0 ${W} ${H}" style="display:block;width:100%">
-      <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#fdd07a"/><stop offset="1" stop-color="${GOLD}"/></linearGradient></defs>
       ${grid}${bars}${labels}
     </svg>`;
 }
@@ -1846,19 +1914,17 @@ function renderMonthBars(d) {
    rounded top) and a dark tooltip pill (#1E1B39) over the active group.
    Recolored to Titan gold + green; wired to two-product Amazon unit data. ── */
 function genGroupCols() {
-  const cats = ['Mar', 'Apr', 'May', 'Jun'];
-  const A = cats.map(() => rint(450, 1450));
-  const B = cats.map(() => rint(380, 1350));
-  let featured = 0, best = -1;
-  cats.forEach((c, i) => { const t = A[i] + B[i]; if (t > best) { best = t; featured = i; } });
-  return { cats, A, B, nameA: 'Product A', nameB: 'Product B', featured };
+  const cats = ['Q1', 'Q2', 'Q3', 'Q4'];
+  const A = cats.map(() => rnd(90000, 320000));
+  const B = cats.map(() => rnd(90000, 340000));
+  return { cats, A, B, nameA: 'Product A', nameB: 'Product B', featured: null };
 }
 function gcGeom(d) {
-  const W = 560, H = 254, L = 46, R = 14, T = 30, B = 30;
+  const W = 560, H = 234, L = 44, R = 8, T = 16, B = 26;
   const plotW = W - L - R, plotH = H - T - B, baseY = H - B;
   const n = d.cats.length, slot = plotW / n;
-  const bw = Math.min(26, slot * 0.26), gap = Math.max(5, bw * 0.3), groupW = bw * 2 + gap;
-  const maxv = axisMax(Math.max(...d.A, ...d.B) * 1.05, 4);
+  const bw = Math.min(26, slot * 0.32), gap = 5, groupW = bw * 2 + gap;
+  const maxv = axisMax(Math.max(...d.A, ...d.B) * 1.08, 4);
   const geom = d.cats.map((c, i) => {
     const gx0 = L + slot * i + (slot - groupW) / 2;
     const aH = Math.max(2, d.A[i] / maxv * plotH), bH = Math.max(2, d.B[i] / maxv * plotH);
@@ -1868,45 +1934,50 @@ function gcGeom(d) {
   return { W, H, L, R, T, B, plotW, plotH, baseY, slot, bw, groupW, maxv, geom };
 }
 function gcBand(g, i) {
-  const gg = g.geom[i], bw = g.groupW * 1.5, bx = gg.cx - bw / 2;
-  return `<rect x="${bx.toFixed(1)}" y="${g.T}" width="${bw.toFixed(1)}" height="${(g.baseY - g.T).toFixed(1)}" rx="10" fill="rgba(255,255,255,.06)"/>`;
+  const gg = g.geom[i], bw = g.groupW + 20, bx = gg.cx - bw / 2;
+  return `<rect x="${bx.toFixed(1)}" y="${g.T}" width="${bw.toFixed(1)}" height="${(g.baseY - g.T).toFixed(1)}" fill="rgba(255,255,255,.035)"/>`;
 }
-function gcTip(g, d, i) {
-  const gg = g.geom[i], w = 86, h = 52;
-  let tx = gg.cx - w / 2, ty = gg.topY - h - 10;
-  if (ty < 2) ty = 2;
-  tx = Math.max(2, Math.min(g.W - w - 2, tx));
-  return `<g><rect x="${tx}" y="${ty}" width="${w}" height="${h}" rx="11" fill="#15151b" stroke="var(--border)"/>
-    <circle cx="${tx + 15}" cy="${ty + 17}" r="5" fill="${PAL[0]}"/><text x="${tx + 27}" y="${ty + 21}" font-size="12" fill="#fff">${unitsK(d.A[i])}</text>
-    <circle cx="${tx + 15}" cy="${ty + 35}" r="5" fill="${PAL[1]}"/><text x="${tx + 27}" y="${ty + 39}" font-size="12" fill="#fff">${unitsK(d.B[i])}</text></g>`;
+function gcTip(g, d, i, fmt) {
+  const gg = g.geom[i], w = 96, h = 46;
+  let tx = gg.cx - w / 2, ty = gg.topY - h - 8;
+  if (ty < 0) ty = 0;
+  tx = Math.max(0, Math.min(g.W - w, tx));
+  return `<g><rect x="${tx}" y="${ty}" width="${w}" height="${h}" rx="8" fill="#1a1a1f" stroke="var(--border)"/>
+    <circle cx="${tx + 13}" cy="${ty + 16}" r="4" fill="${NEUTRAL}"/><text x="${tx + 23}" y="${ty + 19}" font-size="11" fill="var(--text-2)">${fmt(d.A[i])}</text>
+    <circle cx="${tx + 13}" cy="${ty + 32}" r="4" fill="${ACCENT}"/><text x="${tx + 23}" y="${ty + 35}" font-size="11" fill="var(--text-2)">${fmt(d.B[i])}</text></g>`;
 }
-function renderGroupCols(d) {
-  const A = PAL[0], Bc = PAL[1], g = gcGeom(d), rx = 4;
+function renderGroupCols(d, opts = {}) {
+  const fmt = opts.fmt || moneyK;
+  const A = NEUTRAL, Bc = ACCENT, g = gcGeom(d), rx = 2, f = d.featured;
   let grid = '';
   for (let s = 0; s <= 4; s++) {
     const y = g.T + g.plotH * s / 4, val = Math.round(g.maxv * (1 - s / 4));
-    grid += `<line x1="${g.L}" y1="${y.toFixed(1)}" x2="${g.W - g.R}" y2="${y.toFixed(1)}" stroke="rgba(255,255,255,.08)" stroke-width="1" stroke-dasharray="4 5"/>`
-      + `<text x="${g.L - 12}" y="${(y + 4).toFixed(1)}" text-anchor="end" font-size="12" font-weight="500" fill="var(--text-3)">${unitsK(val)}</text>`;
+    grid += `<line x1="${g.L}" y1="${y.toFixed(1)}" x2="${g.W - g.R}" y2="${y.toFixed(1)}" stroke="rgba(255,255,255,.05)"/>`
+      + `<text x="${g.L - 10}" y="${(y + 4).toFixed(1)}" text-anchor="end" font-size="11" fill="var(--text-3)">${fmt(val)}</text>`;
   }
+  let seps = '';
+  for (let i = 1; i < d.cats.length; i++) { const x = g.L + g.slot * i;
+    seps += `<line x1="${x.toFixed(1)}" y1="${g.T}" x2="${x.toFixed(1)}" y2="${g.baseY}" stroke="rgba(255,255,255,.04)"/>`; }
   let bars = '', labels = '', hits = '';
   g.geom.forEach((gg, i) => {
     bars += `<rect x="${gg.ax.toFixed(1)}" y="${gg.aY.toFixed(1)}" width="${g.bw.toFixed(1)}" height="${gg.aH.toFixed(1)}" rx="${rx}" fill="${A}"/>`
       + `<rect x="${gg.bx.toFixed(1)}" y="${gg.bY.toFixed(1)}" width="${g.bw.toFixed(1)}" height="${gg.bH.toFixed(1)}" rx="${rx}" fill="${Bc}"/>`;
-    labels += `<text x="${gg.cx.toFixed(1)}" y="${g.H - 9}" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--text-3)">${esc(gg.c)}</text>`;
-    hits += `<rect class="gc-hit" data-i="${i}" x="${(g.L + g.slot * i).toFixed(1)}" y="${g.T}" width="${g.slot.toFixed(1)}" height="${g.plotH}" fill="transparent"/>`;
+    labels += `<text x="${gg.cx.toFixed(1)}" y="${g.H - 8}" text-anchor="middle" font-size="11" fill="var(--text-3)">${esc(gg.c)}</text>`;
+    hits += `<rect class="gc-hit" data-i="${i}" x="${(g.L + g.slot * i).toFixed(1)}" y="${g.T}" width="${g.slot.toFixed(1)}" height="${g.plotH}" fill="transparent"${tipAttr(`<div class="t-h">${gg.c}</div><div class="t-r">${tDot(A)}${esc(d.nameA)} <b>${fmt(d.A[i])}</b></div><div class="t-r">${tDot(Bc)}${esc(d.nameB)} <b>${fmt(d.B[i])}</b></div>`)}/>`;
   });
-  const f = d.featured != null ? d.featured : 0;
-  return `<div class="gc-top">
-      <span class="lg-item"><span class="lg-dot" style="background:${A};border-radius:50%"></span>${esc(d.nameA)}</span>
-      <span class="lg-item"><span class="lg-dot" style="background:${Bc};border-radius:50%"></span>${esc(d.nameB)}</span>
+  return `<div class="gc-top gc-left">
+      <span class="lg-item"><span class="lg-sq" style="background:${A}"></span>${esc(d.nameA)}</span>
+      <span class="lg-item"><span class="lg-sq" style="background:${Bc}"></span>${esc(d.nameB)}</span>
     </div>
     <svg viewBox="0 0 ${g.W} ${g.H}" style="display:block;width:100%">
-      ${grid}${gcBand(g, f)}${bars}${labels}${gcTip(g, d, f)}${hits}
+      ${grid}${seps}${f != null ? gcBand(g, f) : ''}${bars}${labels}${f != null ? gcTip(g, d, f, fmt) : ''}${hits}
     </svg>`;
 }
 function wireGroupCols(body, data, paint) {
   body.querySelectorAll('.gc-hit').forEach(h =>
     h.addEventListener('mouseenter', () => { data.featured = +h.dataset.i; paint(); }));
+  const svg = body.querySelector('svg');
+  if (svg) svg.addEventListener('mouseleave', () => { data.featured = null; paint(); });
 }
 
 /* ── Stacked columns — sales mix by month. Faithful to Figma "Subscriptions"
@@ -1915,28 +1986,38 @@ function wireGroupCols(body, data, paint) {
 function genStacked() {
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
   const segs = [
-    { label: 'Sponsored Products', color: PAL[0] }, { label: 'Sponsored Brands', color: PAL[1] },
-    { label: 'Sponsored Display', color: PAL[2] }, { label: 'Organic', color: PAL[3] },
+    { label: 'Sponsored Products', color: MUTED[0] }, { label: 'Sponsored Brands', color: MUTED[1] },
+    { label: 'Sponsored Display', color: MUTED[2] }, { label: 'Organic', color: MUTED[4] },
   ];
   const share = [0.4, 0.22, 0.13, 0.35];
   const data = months.map(m => { const base = rnd(22000, 60000);
     return { m, vals: segs.map((s, i) => base * share[i] * rnd(0.7, 1.3)) }; });
   return { months, segs, data };
 }
-function renderStacked(d) {
+function renderStacked(d, opts = {}) {
+  const fmt = opts.fmt || money, fmtAxis = opts.fmtAxis || moneyK;
   const W = 560, H = 252, L = 46, R = 14, T = 14, B = 30;
   const plotW = W - L - R, plotH = H - T - B, baseY = H - B;
   const totals = d.data.map(x => x.vals.reduce((a, b) => a + b, 0));
   const max = axisMax(Math.max(...totals) * 1.05, 5);
-  const n = d.data.length, slot = plotW / n, bw = Math.min(40, slot * 0.5), rx = 4;
+  const n = d.data.length, slot = plotW / n, bw = Math.min(32, slot * 0.46);
   let grid = '';
   for (let s = 0; s <= 5; s++) { const y = T + plotH * s / 5, val = Math.round(max * (1 - s / 5));
-    grid += `<line x1="${L}" y1="${y.toFixed(1)}" x2="${W - R}" y2="${y.toFixed(1)}" stroke="rgba(255,255,255,.08)" stroke-width="1" stroke-dasharray="4 5"/>`
-      + `<text x="${L - 12}" y="${(y + 4).toFixed(1)}" text-anchor="end" font-size="12" font-weight="500" fill="var(--text-3)">${moneyK(val)}</text>`; }
+    grid += `<line x1="${L}" y1="${y.toFixed(1)}" x2="${W - R}" y2="${y.toFixed(1)}" stroke="${GRID}" stroke-width="1"/>`
+      + `<text x="${L - 12}" y="${(y + 4).toFixed(1)}" text-anchor="end" font-size="12" font-weight="500" fill="var(--text-3)">${fmtAxis(val)}</text>`; }
   let bars = '', labels = '';
-  d.data.forEach((row, i) => { const cx = L + slot * i + slot / 2; let yTop = baseY;
+  d.data.forEach((row, i) => {
+    const cx = L + slot * i + slot / 2;
+    // Build one consolidated tooltip for the whole column: every segment, color-dotted, + total
+    const rowTotal = row.vals.reduce((a, b) => a + b, 0);
+    const tipHtml = `<div class="t-h">${row.m}</div>`
+      + row.vals.map((v, si) => `<div class="t-r">${tDot(d.segs[si].color)}${d.segs[si].label} <b style="margin-left:auto">${fmt(v)}</b></div>`).join('')
+      + `<div class="t-r" style="border-top:1px solid var(--border);padding-top:5px;margin-top:3px;">Total <b style="margin-left:auto">${fmt(rowTotal)}</b></div>`;
+    const colTip = tipAttr(tipHtml);
+    let yTop = baseY;
     row.vals.forEach((v, si) => { const h = v / max * plotH; yTop -= h;
-      bars += `<rect x="${(cx - bw / 2).toFixed(1)}" y="${yTop.toFixed(1)}" width="${bw}" height="${h.toFixed(1)}" ${si === row.vals.length - 1 ? `rx="${rx}"` : ''} fill="${d.segs[si].color}"/>`; });
+      const ov = si === 0 ? 0 : 0.6;  // upper segments overlap downward to kill hairline seams
+      bars += `<rect x="${(cx - bw / 2).toFixed(1)}" y="${yTop.toFixed(2)}" width="${bw}" height="${(h + ov).toFixed(2)}" fill="${d.segs[si].color}"${colTip}/>`; });
     labels += `<text x="${cx.toFixed(1)}" y="${H - 9}" text-anchor="middle" font-size="11" font-weight="600" fill="var(--text-3)">${row.m}</text>`; });
   const legend = d.segs.map(s => `<span class="lg-item"><span class="lg-dot" style="background:${s.color};border-radius:50%"></span>${s.label}</span>`).join('');
   return `<svg viewBox="0 0 ${W} ${H}" style="display:block;width:100%">${grid}${bars}${labels}</svg><div class="chart-legend">${legend}</div>`;
@@ -1952,7 +2033,8 @@ function genCombo() {
   const ad = total.map(t => t * rnd(0.42, 0.68));
   return { months, ad, total };
 }
-function renderCombo(d) {
+function renderCombo(d, opts = {}) {
+  const fmt = opts.fmt || moneyK, fmtAxis = opts.fmtAxis || moneyK;
   const W = 560, H = 252, L = 46, R = 16, T = 22, B = 30;
   const plotW = W - L - R, plotH = H - T - B, baseY = H - B;
   const n = d.months.length, slot = plotW / n, bw = Math.min(26, slot * 0.42), rx = 4;
@@ -1960,16 +2042,17 @@ function renderCombo(d) {
   const xat = i => L + slot * i + slot / 2, yat = v => baseY - v / max * plotH;
   let grid = '';
   for (let s = 0; s <= 4; s++) { const y = T + plotH * s / 4;
-    grid += `<line x1="${L}" y1="${y.toFixed(1)}" x2="${W - R}" y2="${y.toFixed(1)}" stroke="rgba(255,255,255,.08)" stroke-dasharray="4 5"/>`
-      + `<text x="${L - 10}" y="${(y + 4).toFixed(1)}" text-anchor="end" font-size="11" fill="var(--text-3)">${moneyK(Math.round(max * (1 - s / 4)))}</text>`; }
+    grid += `<line x1="${L}" y1="${y.toFixed(1)}" x2="${W - R}" y2="${y.toFixed(1)}" stroke="${GRID}"/>`
+      + `<text x="${L - 10}" y="${(y + 4).toFixed(1)}" text-anchor="end" font-size="11" fill="var(--text-3)">${fmtAxis(Math.round(max * (1 - s / 4)))}</text>`; }
   let bars = '', labels = '';
   d.ad.forEach((v, i) => {
-    bars += `<rect x="${(xat(i) - bw / 2).toFixed(1)}" y="${yat(v).toFixed(1)}" width="${bw}" height="${(baseY - yat(v)).toFixed(1)}" rx="${rx}" fill="${PAL[0]}" opacity="0.9"/>`;
+    bars += `<rect x="${(xat(i) - bw / 2).toFixed(1)}" y="${yat(v).toFixed(1)}" width="${bw}" height="${(baseY - yat(v)).toFixed(1)}" rx="2" fill="${NEUTRAL}"/>`;
     labels += `<text x="${xat(i).toFixed(1)}" y="${H - 9}" text-anchor="middle" font-size="10.5" fill="var(--text-3)">${d.months[i]}</text>`; });
   const pts = d.total.map((v, i) => [xat(i), yat(v)]);
-  const markers = pts.map(p => `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3.6" fill="#fff" stroke="${PAL[1]}" stroke-width="2"/>`).join('');
-  const legend = `<span class="lg-item"><span class="lg-dot" style="background:${PAL[0]};border-radius:2px"></span>Ad Sales</span><span class="lg-item"><span class="lg-dot" style="background:${PAL[1]};border-radius:50%"></span>Total Sales</span>`;
-  return `<div class="gc-top">${legend}</div><svg viewBox="0 0 ${W} ${H}" style="display:block;width:100%">${grid}${bars}<path d="${smooth(pts)}" fill="none" stroke="${PAL[1]}" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>${markers}${labels}</svg>`;
+  const markers = pts.map(p => `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3.4" fill="var(--bg)" stroke="${ACCENT}" stroke-width="2"/>`).join('');
+  const hits = d.months.map((m, i) => `<rect x="${(L + slot * i).toFixed(1)}" y="${T}" width="${slot.toFixed(1)}" height="${plotH}" fill="transparent"${tipAttr(`<div class="t-h">${m}</div><div class="t-r">${tDot(NEUTRAL)}Ad <b>${fmt(d.ad[i])}</b></div><div class="t-r">${tDot(ACCENT)}Total <b>${fmt(d.total[i])}</b></div>`)}/>`).join('');
+  const legend = `<span class="lg-item"><span class="lg-sq" style="background:${NEUTRAL}"></span>Ad Sales</span><span class="lg-item"><span class="lg-sq" style="background:${ACCENT};border-radius:50%"></span>Total Sales</span>`;
+  return `<div class="gc-top gc-left">${legend}</div><svg viewBox="0 0 ${W} ${H}" style="display:block;width:100%">${grid}${bars}<path d="${smooth(pts)}" fill="none" stroke="${ACCENT}" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>${markers}${labels}${hits}</svg>`;
 }
 
 /* ── Multi-line — ACoS vs TACoS over time. Faithful to Figma "Total income"
@@ -1978,59 +2061,284 @@ function renderCombo(d) {
 function genMultiLine() {
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
   const acos = months.map(() => rnd(22, 40)), tacos = acos.map(a => a * rnd(0.5, 0.72));
-  return { months, acos, tacos, featured: 3 };
+  return { months, acos, tacos, featured: null };
 }
-function renderMultiLine(d) {
+function renderMultiLine(d, opts = {}) {
+  const fmt = opts.fmt || (v => v.toFixed(1) + '%');
   const W = 560, H = 240, L = 42, R = 14, T = 18, B = 30;
   const plotW = W - L - R, plotH = H - T - B, baseY = H - B, n = d.months.length;
   const max = axisMax(Math.max(...d.acos) * 1.15, 4);
   const xat = i => L + plotW * i / (n - 1), yat = v => baseY - v / max * plotH;
   let grid = '';
   for (let s = 0; s <= 4; s++) { const y = T + plotH * s / 4;
-    grid += `<line x1="${L}" y1="${y.toFixed(1)}" x2="${W - R}" y2="${y.toFixed(1)}" stroke="rgba(255,255,255,.07)"/>`
-      + `<text x="${L - 10}" y="${(y + 4).toFixed(1)}" text-anchor="end" font-size="11" fill="var(--text-3)">${(max * (1 - s / 4)).toFixed(0)}%</text>`; }
+    grid += `<line x1="${L}" y1="${y.toFixed(1)}" x2="${W - R}" y2="${y.toFixed(1)}" stroke="${GRID}"/>`
+      + `<text x="${L - 10}" y="${(y + 4).toFixed(1)}" text-anchor="end" font-size="11" fill="var(--text-3)">${fmt(max * (1 - s / 4))}</text>`; }
   const ptsA = d.acos.map((v, i) => [xat(i), yat(v)]), ptsT = d.tacos.map((v, i) => [xat(i), yat(v)]);
   const labels = d.months.map((m, i) => `<text x="${xat(i).toFixed(1)}" y="${H - 9}" text-anchor="middle" font-size="10.5" fill="var(--text-3)">${m}</text>`).join('');
-  const f = d.featured != null ? d.featured : n - 1;
-  const ind = `<line x1="${xat(f).toFixed(1)}" y1="${T}" x2="${xat(f).toFixed(1)}" y2="${baseY}" stroke="rgba(255,255,255,.25)" stroke-dasharray="3 3"/>`
-    + `<circle cx="${xat(f).toFixed(1)}" cy="${ptsA[f][1].toFixed(1)}" r="5" fill="${PAL[0]}"/><circle cx="${xat(f).toFixed(1)}" cy="${ptsT[f][1].toFixed(1)}" r="5" fill="${PAL[1]}"/>`;
-  const hits = d.months.map((m, i) => `<rect class="ml-hit" data-i="${i}" x="${(xat(i) - plotW / (n - 1) / 2).toFixed(1)}" y="${T}" width="${(plotW / (n - 1)).toFixed(1)}" height="${plotH}" fill="transparent"/>`).join('');
-  const legend = `<span class="lg-item"><span class="lg-dot" style="background:${PAL[0]};border-radius:50%"></span>ACoS</span><span class="lg-item"><span class="lg-dot" style="background:${PAL[1]};border-radius:50%"></span>TACoS</span>`;
-  return `<div class="gc-top">${legend}</div><svg viewBox="0 0 ${W} ${H}" style="display:block;width:100%">${grid}${ind}<path d="${smooth(ptsA)}" fill="none" stroke="${PAL[0]}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><path d="${smooth(ptsT)}" fill="none" stroke="${PAL[1]}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>${labels}${hits}</svg>`;
+  const f = d.featured;
+  const ind = f == null ? '' : `<line x1="${xat(f).toFixed(1)}" y1="${T}" x2="${xat(f).toFixed(1)}" y2="${baseY}" stroke="rgba(255,255,255,.18)" stroke-dasharray="3 3"/>`
+    + `<circle cx="${xat(f).toFixed(1)}" cy="${ptsA[f][1].toFixed(1)}" r="4.5" fill="${ACCENT}"/><circle cx="${xat(f).toFixed(1)}" cy="${ptsT[f][1].toFixed(1)}" r="4.5" fill="${MUTED[0]}"/>`;
+  const hits = d.months.map((m, i) => `<rect class="gc-hit" data-i="${i}" x="${(xat(i) - plotW / (n - 1) / 2).toFixed(1)}" y="${T}" width="${(plotW / (n - 1)).toFixed(1)}" height="${plotH}" fill="transparent"${tipAttr(`<div class="t-h">${m}</div><div class="t-r">${tDot(ACCENT)}ACoS <b>${fmt(d.acos[i])}</b></div><div class="t-r">${tDot(MUTED[0])}TACoS <b>${fmt(d.tacos[i])}</b></div>`)}/>`).join('');
+  const legend = `<span class="lg-item"><span class="lg-sq" style="background:${ACCENT};border-radius:50%"></span>ACoS</span><span class="lg-item"><span class="lg-sq" style="background:${MUTED[0]};border-radius:50%"></span>TACoS</span>`;
+  return `<div class="gc-top gc-left">${legend}</div><svg viewBox="0 0 ${W} ${H}" style="display:block;width:100%">${grid}${ind}<path d="${smooth(ptsA)}" fill="none" stroke="${ACCENT}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="${smooth(ptsT)}" fill="none" stroke="${MUTED[0]}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>${labels}${hits}</svg>`;
 }
 function wireMultiLine(body, data, paint) {
-  body.querySelectorAll('.ml-hit').forEach(h => h.addEventListener('mouseenter', () => { data.featured = +h.dataset.i; paint(); }));
+  body.querySelectorAll('.gc-hit').forEach(h => h.addEventListener('mouseenter', () => { data.featured = +h.dataset.i; paint(); }));
+  const svg = body.querySelector('svg');
+  if (svg) svg.addEventListener('mouseleave', () => { data.featured = null; paint(); });
 }
 
-/* ── Heatmap — dayparting (hour × weekday). Faithful to Figma "Users by time of
-   day" (43:28795): grid of rounded cells with intensity, a Low→High legend.
-   Recolored to a Titan gold intensity scale; Amazon ad orders by hour/day. ── */
+/* ── Heatmap — keyword organic rank over time. Rows = tracked keywords, columns
+   = weeks, cell intensity = rank (brighter gold = higher/better rank). Real
+   Amazon data via get_keyword_tracker_data / get_keyword_ranks. Hover a cell
+   for the exact rank that week. ──────────────────────────────────────────── */
 function genHeat() {
-  const hours = ['12a', '2a', '4a', '6a', '8a', '10a', '12p', '2p', '4p', '6p', '8p', '10p'];
-  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  const data = hours.map((h, r) => days.map((dy, c) => {
-    const peak = Math.exp(-Math.pow(r - 7, 2) / 11), wk = c < 5 ? 1 : 0.68;
-    return Math.max(0, peak * wk * rnd(60, 100) + rnd(0, 18));
-  }));
-  return { hours, days, data };
+  const keywords = ['quick dry towel', 'travel towel xl', 'microfiber towel', 'camping towel', 'gym towel', 'beach towel'];
+  const weeks = ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7', 'W8'];
+  const data = keywords.map(() => {
+    let rank = rint(3, 45);
+    return weeks.map(() => { rank = Math.max(1, Math.min(60, rank + rint(-6, 6))); return rank; });
+  });
+  return { keywords, weeks, data };
 }
-function renderHeat(d) {
-  const max = Math.max(...d.data.flat());
-  const W = 560, LBL = 40, R = 10, TOP = 6, gap = 4, ch = 22;
-  const cols = d.days.length, rows = d.hours.length;
+function renderHeat(d, opts = {}) {
+  const fmtCell = opts.fmtCell || (v => 'rank <b>#' + v + '</b>');
+  const rows = d.keywords.length, cols = d.weeks.length, maxRank = 55;
+  const W = 560, LBL = 128, R = 10, TOP = 6, gap = 4, ch = 26;
   const cw = (W - LBL - R - (cols - 1) * gap) / cols, H = TOP + rows * (ch + gap) + 22;
   let cells = '', rowL = '', colL = '';
   d.data.forEach((row, r) => {
-    rowL += `<text x="${LBL - 8}" y="${(TOP + r * (ch + gap) + ch / 2 + 4).toFixed(1)}" text-anchor="end" font-size="10" fill="var(--text-3)">${d.hours[r]}</text>`;
-    row.forEach((v, c) => { const op = (0.12 + 0.88 * (v / max)).toFixed(2), x = LBL + c * (cw + gap), y = TOP + r * (ch + gap);
-      cells += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${cw.toFixed(1)}" height="${ch}" rx="4" fill="${PAL[0]}" fill-opacity="${op}"/>`; });
+    rowL += `<text x="${LBL - 8}" y="${(TOP + r * (ch + gap) + ch / 2 + 4).toFixed(1)}" text-anchor="end" font-size="11" fill="var(--text-2)">${esc(d.keywords[r])}</text>`;
+    row.forEach((rank, c) => {
+      const op = (0.12 + 0.88 * Math.max(0, (maxRank - rank) / maxRank)).toFixed(2);
+      const x = LBL + c * (cw + gap), y = TOP + r * (ch + gap);
+      cells += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${cw.toFixed(1)}" height="${ch}" rx="3" fill="${WIN}" fill-opacity="${op}"${tipAttr(`<div class="t-h">${esc(d.keywords[r])} · ${d.weeks[c]}</div>Organic ${fmtCell(rank)}`)}/>`;
+    });
   });
-  d.days.forEach((dy, c) => { const x = LBL + c * (cw + gap) + cw / 2;
-    colL += `<text x="${x.toFixed(1)}" y="${(TOP + rows * (ch + gap) + 13).toFixed(1)}" text-anchor="middle" font-size="10" fill="var(--text-3)">${dy}</text>`; });
+  d.weeks.forEach((wk, c) => { const x = LBL + c * (cw + gap) + cw / 2;
+    colL += `<text x="${x.toFixed(1)}" y="${(TOP + rows * (ch + gap) + 14).toFixed(1)}" text-anchor="middle" font-size="10" fill="var(--text-3)">${wk}</text>`; });
   return `<svg viewBox="0 0 ${W} ${H}" style="display:block;width:100%">${cells}${rowL}${colL}</svg>
-    <div style="display:flex;align-items:center;gap:8px;justify-content:flex-end;margin-top:8px;font-size:11px;color:var(--text-3);">Low
-      <span style="display:inline-block;width:90px;height:10px;border-radius:5px;background:linear-gradient(90deg,${PAL[0]}22,${PAL[0]});"></span>High</div>`;
+    <div style="display:flex;align-items:center;gap:8px;justify-content:flex-end;margin-top:8px;font-size:11px;color:var(--text-3);">Lower rank
+      <span style="display:inline-block;width:90px;height:10px;border-radius:5px;background:linear-gradient(90deg,${WIN}22,${WIN});"></span>Top rank</div>`;
 }
+
+/* ── 12. KPI — big-number hero + delta + sparkline (snapshot answer) ────── */
+function genKPI() {
+  const value = rnd(70000, 220000);
+  const n = 30, spark = [];
+  let s = value / n * rnd(0.7, 1.1);
+  for (let i = 0; i < n; i++) {
+    s += rnd(-260, 340) + Math.sin(i / 3.2) * 240;
+    s = Math.max(value / n * 0.4, s);
+    spark.push(s);
+  }
+  return { label: 'Total Revenue', value, delta: { value: rnd(8, 32), period: 'vs last month', good: 'up' }, spark };
+}
+function renderKPI(d, opts = {}) {
+  const fmt = opts.fmt || moneyK;
+  const dv = d.delta ? d.delta.value : 0;
+  const up = dv >= 0;
+  const good = !d.delta ? false : d.delta.good === 'up' ? up : !up;
+  const deltaCol = !d.delta ? 'var(--text-3)' : good ? WIN : NEG;
+  // sparkline
+  let spark = '';
+  if (d.spark && d.spark.length) {
+    const W = 260, H = 70, P = 4;
+    const n = d.spark.length, max = Math.max(...d.spark), min = Math.min(...d.spark);
+    const range = (max - min) || 1;
+    const xat = i => P + (W - 2 * P) * i / (n - 1);
+    const yat = v => P + (H - 2 * P) * (1 - (v - min) / range);
+    const pts = d.spark.map((v, i) => [xat(i), yat(v)]);
+    const line = smooth(pts);
+    const area = line + ` L ${xat(n - 1).toFixed(1)} ${H - P} L ${xat(0).toFixed(1)} ${H - P} Z`;
+    const fid = uid();
+    spark = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="display:block;width:100%;height:70px">
+      <defs><linearGradient id="${fid}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="${ACCENT}" stop-opacity="0.36"/>
+        <stop offset="1" stop-color="${ACCENT}" stop-opacity="0"/>
+      </linearGradient></defs>
+      <path d="${area}" fill="url(#${fid})"/>
+      <path d="${line}" fill="none" stroke="${ACCENT}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    </svg>`;
+  }
+  return `<div style="display:flex;align-items:center;gap:32px;padding:8px 4px;flex-wrap:wrap;">
+    <div style="flex:0 0 auto;min-width:180px;">
+      <div style="font-size:48px;font-weight:800;line-height:1;color:var(--text);letter-spacing:-0.02em;font-variant-numeric:tabular-nums;">${fmt(d.value)}</div>
+      <div style="font-size:13px;color:var(--text-3);margin-top:10px;text-transform:uppercase;letter-spacing:0.05em;">${esc(d.label)}</div>
+      ${d.delta ? `<div style="margin-top:12px;display:inline-flex;align-items:center;gap:8px;font-size:12.5px;">
+        <span style="color:${deltaCol};font-weight:700;">${up ? CARETS.up : CARETS.down} ${Math.abs(dv).toFixed(0)}%</span>
+        <span style="color:var(--text-3);">${esc(d.delta.period)}</span>
+      </div>` : ''}
+    </div>
+    <div style="flex:1;min-width:220px;">${spark}</div>
+  </div>`;
+}
+
+/* ── 13. Donut — share-of-total snapshot (Revenue by Category) ──────────── */
+function genDonut() {
+  const cats = [
+    { label: 'Home & Kitchen',         value: 42000 },
+    { label: 'Sports & Outdoors',      value: 28000 },
+    { label: 'Health & Personal Care', value: 18500 },
+    { label: 'Beauty',                 value: 12000 },
+    { label: 'Electronics',            value:  8500 },
+  ];
+  cats.forEach(c => { c.value = Math.round(c.value * rnd(0.85, 1.15)); });
+  return { label: 'total revenue', items: cats, delta: { value: 18, period: 'vs last year', good: 'up' } };
+}
+function renderDonut(d, opts = {}) {
+  const fmt = opts.fmt || moneyK, fmtFull = opts.fmtFull || money;
+  const total = d.total ?? d.items.reduce((a, b) => a + b.value, 0);
+  const cx = 90, cy = 90, r = 68, sw = 18, gapDeg = 1.6;
+  // premium jewel-tone palette anchored on gold:
+  // gold (top) → navy → emerald → wine → royal purple
+  const JEWEL = [ACCENT, '#5378d4', '#3aa779', '#c4567b', '#9c6dd4'];
+  const palette = i => JEWEL[Math.min(i, JEWEL.length - 1)];
+  let arcs = '', cursor = 0;
+  d.items.forEach((it, i) => {
+    const frac = it.value / total, sweep = frac * 360, end = cursor + sweep;
+    const pct = frac * 100, pctStr = pct >= 10 ? pct.toFixed(0) : pct.toFixed(1);
+    const sd = cursor + gapDeg / 2, ed = end - gapDeg / 2;
+    if (ed > sd) {
+      arcs += `<path d="${arcPath(cx, cy, r, sd, ed)}" fill="none" stroke="${palette(i)}" stroke-width="${sw}" stroke-linecap="butt"${tipAttr(`<div class="t-h">${esc(it.label)}</div><b>${fmtFull(it.value)}</b> · ${pctStr}%`)}/>`;
+    }
+    cursor = end;
+  });
+  const legend = d.items.map((it, i) => {
+    const pct = it.value / total * 100, pctStr = pct >= 10 ? pct.toFixed(0) : pct.toFixed(1);
+    return `<div style="display:flex;align-items:center;gap:10px;padding:5px 0;font-size:13px;">
+      <span style="width:8px;height:8px;border-radius:50%;background:${palette(i)};flex-shrink:0;"></span>
+      <span style="color:var(--text-2);flex:1;">${esc(it.label)}</span>
+      <b style="color:var(--text);font-variant-numeric:tabular-nums;">${fmt(it.value)}</b>
+      <span style="color:var(--text-3);font-variant-numeric:tabular-nums;min-width:34px;text-align:right;">${pctStr}%</span>
+    </div>`;
+  }).join('');
+  const dv = d.delta ? d.delta.value : 0;
+  const dGood = d.delta ? (d.delta.good === 'up' ? dv >= 0 : dv <= 0) : false;
+  const deltaFooter = d.delta ? `<div style="margin-top:12px;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-3);">
+      <span style="color:${dGood ? WIN : NEG};font-weight:700;">${dv >= 0 ? CARETS.up : CARETS.down} ${Math.abs(dv)}%</span>
+      <span style="margin-left:8px;">${esc(d.delta.period)}</span>
+    </div>` : '';
+  return `<div style="display:flex;align-items:center;gap:36px;flex-wrap:wrap;">
+    <div style="flex:0 0 auto;">
+      <svg viewBox="0 0 180 180" style="width:200px;display:block;">
+        ${arcs}
+        <text x="${cx}" y="${cy - 2}" text-anchor="middle" font-size="22" font-weight="800" fill="var(--text)" style="font-variant-numeric:tabular-nums;">${fmt(total)}</text>
+        <text x="${cx}" y="${cy + 18}" text-anchor="middle" font-size="10.5" fill="var(--text-3)">${esc(d.label || 'total')}</text>
+      </svg>
+    </div>
+    <div style="flex:1;min-width:240px;max-width:380px;">
+      ${legend}
+      ${deltaFooter}
+    </div>
+  </div>`;
+}
+
+/* ── 14. Forecast — actual + projected with confidence band (where am I headed?) */
+function genForecast() {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'];
+  const actual = [];
+  let v = rnd(32000, 48000);
+  for (let i = 0; i < 5; i++) { v += rnd(-3500, 5500); v = Math.max(15000, v); actual.push(v); }
+  const forecast = [actual[actual.length - 1]];
+  for (let i = 1; i < 4; i++) forecast.push(forecast[i - 1] * rnd(1.04, 1.14));
+  const lower = forecast.map((f, i) => f * (1 - 0.05 * (i + 1)));
+  const upper = forecast.map((f, i) => f * (1 + 0.07 * (i + 1)));
+  return { months, actual, forecast, confidence: { lower, upper } };
+}
+function renderForecast(d, opts = {}) {
+  const fmt = opts.fmt || money, fmtAxis = opts.fmtAxis || moneyK;
+  const W = 560, H = 252, L = 48, R = 14, T = 22, B = 30;
+  const nA = d.actual.length, nF = d.forecast.length;
+  const totalN = nA + nF - 1;
+  const allVals = [...d.actual, ...d.forecast, ...(d.confidence?.upper || [])];
+  const max = niceMax(Math.max(...allVals) * 1.08);
+  const xat = i => L + (W - L - R) * i / (totalN - 1);
+  const yat = v => T + (H - T - B) * (1 - v / max);
+  let grid = '';
+  for (let g = 0; g <= 4; g++) {
+    const y = T + (H - T - B) * g / 4, val = max * (1 - g / 4);
+    grid += `<line x1="${L}" y1="${y.toFixed(1)}" x2="${W - R}" y2="${y.toFixed(1)}" stroke="${GRID}" stroke-width="1"/>`
+      + `<text x="${L - 10}" y="${(y + 4).toFixed(1)}" text-anchor="end" font-size="12" font-weight="500" fill="var(--text-3)">${fmtAxis(val)}</text>`;
+  }
+  let xlab = '';
+  d.months.forEach((m, i) => { if (i < totalN) xlab += `<text x="${xat(i).toFixed(1)}" y="${H - 8}" text-anchor="middle" font-size="11" font-weight="600" fill="var(--text-3)">${esc(m)}</text>`; });
+  const aPts = d.actual.map((v, i) => [xat(i), yat(v)]);
+  const aLine = smooth(aPts);
+  const aArea = aLine + ` L ${xat(nA - 1).toFixed(1)} ${H - B} L ${xat(0).toFixed(1)} ${H - B} Z`;
+  const fPts = d.forecast.map((v, i) => [xat(nA - 1 + i), yat(v)]);
+  const fLine = smooth(fPts);
+  let bandPath = '';
+  if (d.confidence) {
+    const upPts = d.confidence.upper.map((v, i) => [xat(nA - 1 + i), yat(v)]);
+    const lowPts = d.confidence.lower.map((v, i) => [xat(nA - 1 + i), yat(v)]);
+    bandPath = `M ${upPts[0][0]} ${upPts[0][1]} ` + upPts.slice(1).map(p => `L ${p[0]} ${p[1]}`).join(' ')
+      + ` ` + lowPts.slice().reverse().map(p => `L ${p[0]} ${p[1]}`).join(' ') + ` Z`;
+  }
+  const divX = xat(nA - 1);
+  const fillId = uid();
+  return `<svg viewBox="0 0 ${W} ${H}" style="display:block;width:100%">
+    <defs><linearGradient id="${fillId}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="${ACCENT}" stop-opacity="0.36"/>
+      <stop offset="0.6" stop-color="${ACCENT}" stop-opacity="0.08"/>
+      <stop offset="1" stop-color="${ACCENT}" stop-opacity="0"/>
+    </linearGradient></defs>
+    ${grid}${xlab}
+    ${bandPath ? `<path d="${bandPath}" fill="${WIN}" fill-opacity="0.12"/>` : ''}
+    <path d="${aArea}" fill="url(#${fillId})"/>
+    <path d="${aLine}" fill="none" stroke="${ACCENT}" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="${fLine}" fill="none" stroke="${WIN}" stroke-width="2.4" stroke-dasharray="5 4" stroke-linejoin="round" stroke-linecap="round"/>
+    <line x1="${divX.toFixed(1)}" y1="${T}" x2="${divX.toFixed(1)}" y2="${H - B}" stroke="rgba(255,255,255,0.16)" stroke-width="1" stroke-dasharray="2 3"/>
+    <text x="${divX.toFixed(1)}" y="${(T - 8).toFixed(1)}" text-anchor="middle" font-size="9.5" font-weight="700" letter-spacing="0.08em" fill="var(--text-3)">TODAY</text>
+    <circle cx="${divX.toFixed(1)}" cy="${yat(d.actual[nA - 1]).toFixed(1)}" r="4" fill="${ACCENT}"/>
+    ${d.actual.map((v, i) => `<rect x="${(xat(i) - 18).toFixed(1)}" y="${T}" width="36" height="${H - T - B}" fill="transparent"${tipAttr(`<div class="t-h">${esc(d.months[i])}</div><b>${fmt(v)}</b> actual`)}/>`).join('')}
+    ${d.forecast.slice(1).map((v, i) => `<rect x="${(xat(nA + i) - 18).toFixed(1)}" y="${T}" width="36" height="${H - T - B}" fill="transparent"${tipAttr(`<div class="t-h">${esc(d.months[nA + i])}</div><b>${fmt(v)}</b> projected<br><span style="color:var(--text-3)">range ${fmt(d.confidence.lower[i + 1])} – ${fmt(d.confidence.upper[i + 1])}</span>`)}/>`).join('')}
+  </svg>
+  <div style="display:flex;align-items:center;gap:22px;justify-content:center;margin-top:10px;font-size:11.5px;color:var(--text-3);">
+    <span style="display:inline-flex;align-items:center;gap:7px;"><span style="display:inline-block;width:18px;border-top:2px solid ${ACCENT};"></span>Actual</span>
+    <span style="display:inline-flex;align-items:center;gap:7px;"><span style="display:inline-block;width:18px;border-top:2px dashed ${WIN};"></span>Forecast</span>
+    <span style="display:inline-flex;align-items:center;gap:7px;"><span style="display:inline-block;width:14px;height:8px;background:${WIN};opacity:0.18;border-radius:2px;"></span>Confidence range</span>
+  </div>`;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   Charts — reusable component library. Each is a pure (data, opts) → markup
+   function: feed it ANY data and it computes its own geometry. opts.fmt formats
+   the displayed values, opts.fmtAxis formats axis ticks (both default to the
+   Titan/Amazon money formatters but accept any formatter — units, %, plain #).
+   Data contracts (feed your own data in these shapes; opts.fmt / opts.fmtAxis
+   override the default Amazon money/percent formatting):
+     Charts.area(d,o)           d:{sales:number[]}                                  o:{fmt,fmtAxis}
+     Charts.columns(d,o)        d:{items:[{label,value}], period?}                  o:{fmt,fmtAxis}
+     Charts.groupedColumns(d,o) d:{cats:[], A:number[], B:number[], nameA, nameB}   o:{fmt}
+     Charts.rankedBars(items,o) items:[{label,value,orders}]                        o:{fmt,fmtAxis}
+     Charts.funnel(stages,o)    stages:[{label,value}]                              o:{fmt}
+     Charts.gauge(d,o)          d:{title,value,max,threshold,label,unit}            o:{fmt}
+     Charts.bullet(rows,o)      rows:[{label,unit,value,target,max,good:'low'|'high'}]  o:{fmt}
+     Charts.stacked(d,o)        d:{segs:[{label,color}], data:[{m, vals:number[]}]} o:{fmt,fmtAxis}
+     Charts.combo(d,o)          d:{months:[], ad:number[], total:number[]}          o:{fmt,fmtAxis}
+     Charts.multiLine(d,o)      d:{months:[], acos:number[], tacos:number[]}        o:{fmt}
+     Charts.heatmap(d,o)        d:{keywords:[], weeks:[], data:number[][]}          o:{fmtCell}
+     Charts.kpi(d,o)            d:{label,value,delta?:{value,period,good},spark?:number[]}  o:{fmt}
+     Charts.donut(d,o)          d:{label?,items:[{label,value}],total?,delta?}      o:{fmt,fmtFull}
+     Charts.forecast(d,o)       d:{months:[],actual:[],forecast:[],confidence?:{lower:[],upper:[]}}  o:{fmt,fmtAxis}
+   ════════════════════════════════════════════════════════════════════════ */
+const Charts = {
+  area:           (d, o) => renderTrend(d, o),
+  columns:        (d, o) => renderMonthBars(d, o),
+  groupedColumns: (d, o) => renderGroupCols(d, o),
+  rankedBars:     (d, o) => renderRank(d, o),
+  funnel:         (d, o) => renderFunnel(d, o),
+  gauge:          (d, o) => renderGauge2(d, o),
+  bullet:         (d, o) => renderBullet(d, o),
+  stacked:        (d, o) => renderStacked(d, o),
+  combo:          (d, o) => renderCombo(d, o),
+  multiLine:      (d, o) => renderMultiLine(d, o),
+  heatmap:        (d, o) => renderHeat(d, o),
+  kpi:            (d, o) => renderKPI(d, o),
+  donut:          (d, o) => renderDonut(d, o),
+  forecast:       (d, o) => renderForecast(d, o),
+};
 
 /* ── Artifact catalog — CORE 6 (Figma styles, recolored to Titan brand) ───── */
 /* Non-core renderers (rank, keyword table, funnel, before/after) are still
@@ -2040,15 +2348,10 @@ function renderHeat(d) {
    chart is rebuilt pixel-faithfully — then flip `built: true`.  The gen/render
    pairs already exist in the file, so flipping a slot on is a one-line change. */
 const ARTIFACTS = [
-  { id: 'kpi', built: true, title: 'KPI Scorecard', sub: 'Account snapshot · last 30 days',
-    figma: 'Realtime users / Total visits 65:2749',
-    scenario: '<b>"How\'s my account doing this month?"</b>',
-    why: 'Headline numbers, each with a delta vs the prior period and a mini sparkline. Used whenever the answer is a few key metrics — the seller reads direction (▲▼) and shape at a glance, not just a value.',
-    gen: genKpi, render: renderKpi },
   { id: 'trend', built: true, title: 'Sales Trend', sub: 'Daily sales · last 30 days',
     figma: 'Sales Report 44:3757',
     scenario: '<b>"Show me how my sales have moved over the last month."</b>',
-    why: 'A smooth gradient area is the right pick anytime the question is about <b>change over time</b>. The dotted band marks the most recent week so the seller sees the latest run in context, and the footer rolls the daily data up to week / month / projected year.',
+    why: 'A smooth gradient area is the right pick anytime the question is about <b>change over time</b>. Hover any day for its exact sales, and the footer rolls the daily data up to this week, this month, and a daily average for pacing.',
     gen: genTrend, render: renderTrend },
   { id: 'monthbars', built: true, title: 'Monthly Sales', sub: 'Net sales by month · this year',
     figma: 'Activity / Online users 41:1741',
@@ -2057,16 +2360,11 @@ const ARTIFACTS = [
     gen: genMonthBars, render: renderMonthBars,
     wire: (body, data, paint) => { body.querySelectorAll('.seg-btn').forEach(b =>
       b.addEventListener('click', () => { data.period = b.dataset.period; paint(); })); } },
-  { id: 'compare', built: true, title: 'Product A vs Product B', sub: 'Units by month · last 4 months',
+  { id: 'compare', built: true, title: 'Product A vs Product B', sub: 'Revenue by quarter',
     figma: 'Demographic 41:1688',
-    scenario: '<b>"Compare these two products month over month — who\'s pulling ahead?"</b>',
-    why: 'For <b>two series across a timeline</b>, grouped columns sit them shoulder-to-shoulder per period on one shared axis. Hover any month for the exact pair — you read both the per-month gap and each product\'s trend at once.',
+    scenario: '<b>"Compare these two products by quarter — who\'s pulling ahead?"</b>',
+    why: 'For <b>two series across periods</b>, grouped columns sit them shoulder-to-shoulder on one shared axis. Hover any quarter for the exact pair — you read both the per-quarter gap and each product\'s trajectory at once.',
     gen: genGroupCols, render: renderGroupCols, wire: wireGroupCols },
-  { id: 'donut', built: true, title: 'Sales by Campaign Type', sub: 'Share of total sales',
-    figma: 'Monthly activity 41:555',
-    scenario: '<b>"Where are my sales coming from — ads or organic?"</b>',
-    why: 'A donut is for <b>parts of a whole</b> (4-5 slices max). Perfect for the ad-type vs organic split. More than ~5 categories and we\'d switch to a ranked bar instead.',
-    gen: genDonut, render: renderDonut },
   { id: 'rank', built: true, title: 'Top Search Terms', sub: 'Spend by search term · last 30 days',
     figma: 'Popular countries 41:1577',
     scenario: '<b>"Which search terms are eating my ad budget?"</b>',
@@ -2081,7 +2379,7 @@ const ARTIFACTS = [
     figma: 'Portfolio / Total Score gauge',
     scenario: '<b>"Do I need to reorder this SKU?"</b>',
     why: 'A radial gauge is for <b>a single value against a threshold</b>. The white mark is your current days of cover, the red zone is the reorder threshold, and the color (green/gold/red) makes "reorder now" unmissable.',
-    gen: genGauge, render: renderGauge },
+    gen: genGauge2, render: renderGauge2 },
   { id: 'bullet', built: true, title: 'Efficiency Targets', sub: 'Actual vs target',
     figma: 'Bullet Charts',
     scenario: '<b>"Am I hitting my ACoS and conversion targets?"</b>',
@@ -2102,11 +2400,19 @@ const ARTIFACTS = [
     scenario: '<b>"How are my ad and total efficiency trending together?"</b>',
     why: 'Multi-line is for <b>comparing 2–3 series over time</b>. ACoS (ad-only) vs TACoS (total) on one axis shows whether ad efficiency is translating to the whole account. Hover any month for both values.',
     gen: genMultiLine, render: renderMultiLine, wire: wireMultiLine },
-  { id: 'heat', built: true, title: 'Dayparting Heatmap', sub: 'Orders by hour × weekday',
+  { id: 'heat', built: true, title: 'Keyword Rank Over Time', sub: 'Organic rank by week',
     figma: 'Users by time of day 43:28795',
-    scenario: '<b>"When do my customers actually buy — which hours and days?"</b>',
-    why: 'A heatmap reveals <b>patterns across two dimensions</b> at once. Order intensity by hour and weekday exposes dayparting opportunities — when to raise bids and when to pull back.',
+    scenario: '<b>"Which keywords are climbing or slipping in organic rank?"</b>',
+    why: 'A heatmap reveals <b>patterns across two dimensions</b> at once — each row a keyword, each column a week, brighter = higher organic rank. You spot which terms are climbing, slipping, or volatile at a glance. Hover any cell for the exact rank.',
     gen: genHeat, render: renderHeat },
+  { id: 'donut', built: true, title: 'Revenue by Category', sub: 'Share of total · this month',
+    scenario: '<b>"Break down my revenue by product category."</b>',
+    why: 'A donut shows <b>share-of-total at a glance</b>: total in the center, each slice a category, the legend carries exact $ and %. Use it whenever the question is "break down by X" with no time dimension.',
+    gen: genDonut, render: renderDonut },
+  { id: 'forecast', built: true, title: 'Revenue Forecast', sub: 'Actual + 3-month projection',
+    scenario: '<b>"What\'s my projected revenue next month?"</b>',
+    why: 'A forward-looking area chart: <b>solid gold</b> is what already happened, <b>dashed green</b> is the projection, and the <b>shaded band</b> is the confidence range. The "Today" line makes the boundary unmissable.',
+    gen: genForecast, render: renderForecast },
 ];
 
 /* Per-type wireframe icons for placeholder slots */
@@ -2139,8 +2445,8 @@ function chartCard(art, idx) {
   const card = node(
     `<div class="chart-card">
        <div class="chart-head">
-         <div><div class="chart-title">${esc(art.title)}</div><div class="chart-sub">${esc(art.sub)}${art.figma ? ' · <span style="color:var(--amber)">Figma: ' + esc(art.figma) + '</span>' : ''}</div></div>
-         <button class="chart-shuffle">${SHUFFLE_ICON}Shuffle data</button>
+         <div><div class="chart-title">${esc(art.title)}</div><div class="chart-sub">${esc(art.sub)}</div></div>
+         <button class="chart-shuffle">${SHUFFLE_ICON}Shuffle</button>
        </div>
        <div class="chart-body"></div>
      </div>`);
@@ -2161,42 +2467,35 @@ const GALLERY_INTRO = [
 
 const BULB = '<svg class="bulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4M12 2a7 7 0 00-4 12.7c.6.5 1 1.3 1 2.1h6c0-.8.4-1.6 1-2.1A7 7 0 0012 2z"/></svg>';
 
+/* Plays the chart set as a natural conversation: each chart's scenario becomes
+   the user's question and the AI answers with that chart. All charts, one thread. */
 async function showChartGallery() {
   if (busy) { currentRun && (currentRun.cancelled = true); setProcessing(false); }
   mode = 'chat';
   clearActiveNav();
   clearWelcome();
-  addUserMessage('Show me all the charts and visual artifacts you can render, using Amazon examples.');
   setProcessing(true);
   const run = currentRun = { cancelled: false };
+  const built = ARTIFACTS.filter(a => a.built);
 
-  // short agent trace
-  const msg = node('<div class="msg-ai"></div>');
-  const trace = node('<div class="agent-trace"></div>');
-  msg.appendChild(trace); messagesList.appendChild(msg);
-  const step = stepEl('Assembling the artifact gallery'); trace.appendChild(step); scrollToBottom();
-  await sleep(650); if (run.cancelled) return finish(run);
-  const builtCount = ARTIFACTS.filter(a => a.built).length;
-  setStepDone(step, builtCount + ' of ' + ARTIFACTS.length + ' charts built');
-
-  const content = node('<div class="ai-content"></div>');
-  msg.appendChild(content);
-  content.innerHTML = GALLERY_INTRO.join('');
-  scrollToBottom();
-  await sleep(400); if (run.cancelled) return finish(run);
-
-  for (let i = 0; i < ARTIFACTS.length; i++) {
-    const art = ARTIFACTS[i];
-    content.insertAdjacentHTML('beforeend',
-      `<div class="gallery-h"><span class="n">${i + 1}</span>${esc(art.title)}</div>
-       <div class="gallery-scn">${art.scenario}</div>`);
+  for (let i = 0; i < built.length; i++) {
+    const art = built[i];
+    const q = art.scenario.replace(/<[^>]+>/g, '').replace(/^[\s"“”]+|[\s"“”]+$/g, '').trim();
+    // user turn
+    addUserMessage(q);
+    await sleep(340); if (run.cancelled) return finish(run);
+    // AI turn: short answer + the chart + a one-line "when I use it"
+    const msg = node('<div class="msg-ai"></div>');
+    const content = node('<div class="ai-content"></div>');
+    msg.appendChild(content);
+    messagesList.appendChild(msg);
+    content.innerHTML = `<p>Here's your <strong>${esc(art.title)}</strong> — ${esc(art.sub.toLowerCase())}.</p>`;
     content.appendChild(chartCard(art, i));
-    content.insertAdjacentHTML('beforeend',
-      `<div class="why-note">${BULB}<div><b>When I use it: </b>${art.why}</div></div>`);
+    content.insertAdjacentHTML('beforeend', `<div class="why-note">${BULB}<div>${art.why}</div></div>`);
+    msg.appendChild(actionsEl(content, q));
     scrollToBottom();
-    await sleep(360); if (run.cancelled) return finish(run);
+    await sleep(520); if (run.cancelled) return finish(run);
   }
-  msg.appendChild(actionsEl(content, 'All charts'));
   finish(run); scrollToBottom();
 }
 

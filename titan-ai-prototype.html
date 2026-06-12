@@ -552,6 +552,64 @@ body.light .source-thumb .play { color: rgba(0,0,0,0.28); }
 .link-another:hover { color: var(--amber); }
 .link-another svg { width: 16px; height: 16px; }
 
+/* Connectors modal */
+.modal-connectors { width: 580px; max-width: calc(100vw - 40px); padding: 24px 26px 26px; position: relative; }
+.conn-section-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); margin: 14px 0 12px; }
+.connector-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+.connector-card {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 13px; border: 1px solid var(--border);
+  border-radius: 12px; background: var(--bg-card);
+  cursor: pointer; transition: border-color .14s, background .14s;
+}
+.connector-card:hover { background: rgba(255,255,255,0.02); }
+.cc-tile {
+  width: 57px; height: 57px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.cc-tile svg { width: 47px; height: 47px; }
+.cc-info { flex: 1; min-width: 0; }
+.cc-name { font-size: 13.5px; font-weight: 600; color: var(--text); }
+.cc-desc { font-size: 11.5px; color: var(--text-3); margin-top: 2px; }
+.cc-action {
+  font-size: 13px; font-weight: 600; color: var(--text-2);
+  padding: 8px 18px; border: 1px solid var(--border); border-radius: 8px;
+  flex-shrink: 0; background: transparent;
+  transition: color .14s, border-color .14s, background .14s;
+}
+.connector-card:hover .cc-action { color: var(--text); background: rgba(0,0,0,0.35); border-color: var(--border-2); }
+.connector-card.connected .cc-action { color: var(--green); border-color: rgba(80,200,80,0.35); }
+.add-custom-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; padding: 12px; border: 1px dashed var(--border);
+  border-radius: 12px; background: transparent;
+  color: var(--text-2); font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: color .14s, border-color .14s, background .14s;
+}
+.add-custom-btn:hover { color: var(--amber); border-color: var(--amber-dim); background: var(--bg-hover); }
+.add-custom-btn svg { width: 14px; height: 14px; }
+.custom-form { display: none; margin-top: 12px; padding: 14px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg-card); }
+.custom-form.show { display: block; animation: pop 0.14s ease-out; }
+.cf-row { display: block; margin-bottom: 10px; }
+.cf-row span { display: block; font-size: 11px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px; }
+.cf-row input {
+  width: 100%; padding: 9px 11px; border: 1px solid var(--border);
+  border-radius: 8px; background: var(--input-bg); color: var(--text);
+  font-size: 13px; font-family: inherit; outline: none;
+  transition: border-color .12s;
+}
+.cf-row input:focus { border-color: var(--amber-dim); }
+.cf-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+.cf-cancel, .cf-save {
+  padding: 8px 14px; border-radius: 8px; font-size: 12.5px; font-weight: 600;
+  border: 1px solid var(--border); background: transparent; color: var(--text-2);
+  cursor: pointer; transition: all .12s;
+}
+.cf-cancel:hover { color: var(--text); }
+.cf-save { background: var(--amber); color: #1b1b1d; border-color: var(--amber); }
+.cf-save:hover { background: var(--amber-light); border-color: var(--amber-light); }
+
 /* ── Scheduled tasks ─────────────────────────────────────────────────────── */
 .sched-list { margin-bottom: 2px; }
 .sched-item {
@@ -894,6 +952,10 @@ body.light .seg-btn.on { color: var(--text); background: rgba(0,0,0,0.07); }
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
         Settings
       </div>
+      <div class="menu-item" data-action="connectors">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6M15 2v6M6 8h12v3a6 6 0 01-6 6 6 6 0 01-6-6V8zM12 17v5"/></svg>
+        Connectors
+      </div>
       <div class="menu-item" data-action="theme">
         <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
         <span id="themeLabel">Light mode</span>
@@ -998,6 +1060,20 @@ body.light .seg-btn.on { color: var(--text); background: rgba(0,0,0,0.07); }
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
       Link Another Titan Tools Account
     </div>
+  </div>
+</div>
+
+<!-- Connectors modal -->
+<div class="overlay" id="connectorsOverlay">
+  <div class="modal modal-connectors">
+    <button class="modal-close" id="connectorsClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+    <div class="settings-head">
+      <svg class="gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6M15 2v6M6 8h12v3a6 6 0 01-6 6 6 6 0 01-6-6V8zM12 17v5"/></svg>
+      <div class="settings-title">Connectors</div>
+    </div>
+    <div class="settings-sub">Plug Titan AI into the tools your team already uses.</div>
+    <div class="conn-section-label">Suggested</div>
+    <div class="connector-grid" id="connectorGrid"></div>
   </div>
 </div>
 
@@ -3023,11 +3099,55 @@ $('#profileBar').addEventListener('click', e => {
   e.stopPropagation();
   $('#profileMenu').classList.toggle('show');
 });
+/* ── Connectors ───────────────────────────────────────────────────────── */
+const CONNECTORS = [
+  { id: 'slack', name: 'Slack', desc: 'Alerts & daily digests', tint: 'rgba(255,255,255,0.04)',
+    icon: '<svg viewBox="0 0 270 270" xmlns="http://www.w3.org/2000/svg">'
+      + '<path fill="#E01E5A" d="M99.4,151.2c0,7.1-5.8,12.9-12.9,12.9c-7.1,0-12.9-5.8-12.9-12.9c0-7.1,5.8-12.9,12.9-12.9h12.9V151.2z"/>'
+      + '<path fill="#E01E5A" d="M105.9,151.2c0-7.1,5.8-12.9,12.9-12.9s12.9,5.8,12.9,12.9v32.3c0,7.1-5.8,12.9-12.9,12.9s-12.9-5.8-12.9-12.9V151.2z"/>'
+      + '<path fill="#36C5F0" d="M118.8,99.4c-7.1,0-12.9-5.8-12.9-12.9c0-7.1,5.8-12.9,12.9-12.9s12.9,5.8,12.9,12.9v12.9H118.8z"/>'
+      + '<path fill="#36C5F0" d="M118.8,105.9c7.1,0,12.9,5.8,12.9,12.9s-5.8,12.9-12.9,12.9H86.5c-7.1,0-12.9-5.8-12.9-12.9s5.8-12.9,12.9-12.9H118.8z"/>'
+      + '<path fill="#2EB67D" d="M170.6,118.8c0-7.1,5.8-12.9,12.9-12.9c7.1,0,12.9,5.8,12.9,12.9s-5.8,12.9-12.9,12.9h-12.9V118.8z"/>'
+      + '<path fill="#2EB67D" d="M164.1,118.8c0,7.1-5.8,12.9-12.9,12.9c-7.1,0-12.9-5.8-12.9-12.9V86.5c0-7.1,5.8-12.9,12.9-12.9c7.1,0,12.9,5.8,12.9,12.9V118.8z"/>'
+      + '<path fill="#ECB22E" d="M151.2,170.6c7.1,0,12.9,5.8,12.9,12.9c0,7.1-5.8,12.9-12.9,12.9c-7.1,0-12.9-5.8-12.9-12.9v-12.9H151.2z"/>'
+      + '<path fill="#ECB22E" d="M151.2,164.1c-7.1,0-12.9-5.8-12.9-12.9c0-7.1,5.8-12.9,12.9-12.9h32.3c7.1,0,12.9,5.8,12.9,12.9c0,7.1-5.8,12.9-12.9,12.9H151.2z"/>'
+      + '</svg>' },
+];
+const connectedSet = new Set();  // demo state — prototype only
+function renderConnectors() {
+  const grid = $('#connectorGrid');
+  grid.innerHTML = CONNECTORS.map(c => {
+    const on = connectedSet.has(c.id);
+    return `<div class="connector-card ${on ? 'connected' : ''}" data-id="${c.id}">
+      <div class="cc-tile" style="background:${c.tint}22;color:${c.tint};">${c.icon}</div>
+      <div class="cc-info">
+        <div class="cc-name">${esc(c.name)}</div>
+        <div class="cc-desc">${esc(c.desc)}</div>
+      </div>
+      <div class="cc-action">${on ? 'Connected' : 'Connect'}</div>
+    </div>`;
+  }).join('');
+  grid.querySelectorAll('.connector-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const id = card.dataset.id;
+      if (connectedSet.has(id)) connectedSet.delete(id); else connectedSet.add(id);
+      renderConnectors();
+    });
+  });
+}
+function openConnectors() {
+  renderConnectors();
+  openOverlay('#connectorsOverlay');
+}
+$('#connectorsClose').addEventListener('click', () => closeOverlay('#connectorsOverlay'));
+$('#connectorsOverlay').addEventListener('click', e => { if (e.target.id === 'connectorsOverlay') closeOverlay('#connectorsOverlay'); });
+
 $('#profileMenu').addEventListener('click', e => {
   const item = e.target.closest('.menu-item'); if (!item) return;
   const action = item.dataset.action;
   closeAllMenus();
   if (action === 'settings') { renderLinked(); openOverlay('#settingsOverlay'); }
+  else if (action === 'connectors') { openConnectors(); }
   else if (action === 'theme') { toggleTheme(); }
   else if (action === 'logout') { /* no-op in prototype */ }
 });
@@ -3063,7 +3183,7 @@ document.addEventListener('click', e => {
   }
 });
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeAllMenus(); closeOverlay('#settingsOverlay'); closeOverlay('#autoApproveOverlay'); closeEdit(); }
+  if (e.key === 'Escape') { closeAllMenus(); closeOverlay('#settingsOverlay'); closeOverlay('#autoApproveOverlay'); closeOverlay('#connectorsOverlay'); closeEdit(); }
 });
 
 /* ── Init ───────────────────────────────────────────────────────────────── */
